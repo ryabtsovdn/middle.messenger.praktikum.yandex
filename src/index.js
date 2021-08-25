@@ -1,2 +1,6 @@
-const root = document.querySelector('#root');
-root.textContent = 'Ready';
+import * as login from './components/pages/login-page';
+import './style.css';
+
+const root = document.getElementById('root');
+
+root.append(login.render({}));
