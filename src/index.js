@@ -1,12 +1,13 @@
 import './style.css';
 
+const chat = import('./components/pages/chat-page');
 const login = import('./components/pages/login-page');
 const register = import('./components/pages/register-page');
 
 const root = document.getElementById('root');
 
 const routes = {
-    '/': login,
+    '/': chat,
     '/login': login,
     '/register': register,
 };
