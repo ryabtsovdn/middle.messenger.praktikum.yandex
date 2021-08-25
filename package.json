@@ -1,8 +1,8 @@
 {
   "main": "index.js",
   "scripts": {
-    "dev": "./node_modules/.bin/parcel index.html",
-    "build": "./node_modules/.bin/parcel build index.html"
+    "dev": "./node_modules/.bin/parcel static/index.html",
+    "build": "./node_modules/.bin/parcel build static/index.html"
   },
   "repository": {
     "type": "git",
@@ -16,6 +16,12 @@
   "homepage": "https://github.com/ryabtsovdn/middle.messenger.praktikum.yandex#readme",
   "devDependencies": {
     "autoprefixer": "^10.3.2",
-    "parcel": "^2.0.0-rc.0"
+    "parcel": "^2.0.0-rc.0",
+    "parcel-plugin-static-files-copy": "^2.6.0",
+    "postcss-nested": "^5.0.6"
+  },
+  "staticFiles": {
+    "staticPath": "static",
+    "watcherGlob": "**"
   }
 }
