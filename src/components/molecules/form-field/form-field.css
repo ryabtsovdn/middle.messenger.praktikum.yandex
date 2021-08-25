@@ -1,0 +1,19 @@
+.form-field {
+    position: relative;
+    padding: 8px 0;
+}
+
+.form-field__label {
+    position: absolute;
+    left: 0;
+}
+
+.form-field__input {
+    width: 280px;
+    font-size: 13px;
+    border: none;
+    border-bottom: 1px solid #3369F3;
+    &:focus {
+        outline: none;
+    }
+}
