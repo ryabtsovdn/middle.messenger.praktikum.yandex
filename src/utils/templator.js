@@ -22,6 +22,22 @@ export class Templator {
         return new DOMParser().parseFromString(compiled, 'text/html').body.firstChild;
     }
 
+    _compilePartial(partial, ctx, hasNestedPartials) {
+        const [key, ...rest] = partial.split(/\s+/);
+        const params = rest.reduce((acc, param) => {
+            const [key, value] = param.split('=');
+            acc[key] = value;
+            return acc;
+        }, {});
+        const partialCtx = Object.assign(params, ctx);
+        if (hasNestedPartials) {
+            for (const [key, value] of Object.entries(params)) {
+                params[key] = Templator.partials[value] ? Templator.partials[value].compile(partialCtx) : value;
+            }
+        }
+        return Templator.partials[key].compile(partialCtx);
+    }
+
     _compileTemplate(ctx) {
         let match;
         let tmpl = this._template;
@@ -29,15 +45,15 @@ export class Templator {
             if (!match[1]) {
                 continue;
             }
+            if (match[1].startsWith('#>')) {
+                const partial = match[1].slice(2).trim();
+                const partialCompiled = this._compilePartial(partial, ctx, true);
+                tmpl = tmpl.replace(new RegExp(match[0], 'gi'), partialCompiled);
+                continue;
+            }
             if (match[1].startsWith('>')) {
                 const partial = match[1].slice(1).trim();
-                const [key, ...rest] = partial.split(/\s+/);
-                const params = rest.reduce((acc, param) => {
-                    const [key, value] = param.split('=');
-                    acc[key] = value;
-                    return acc;
-                }, {});
-                const partialCompiled = Templator.partials[key].compile(params);
+                const partialCompiled = this._compilePartial(partial, ctx);
                 tmpl = tmpl.replace(new RegExp(match[0], 'gi'), partialCompiled);
                 continue;
             }
