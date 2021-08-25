@@ -23,12 +23,15 @@ export class Templator {
     }
 
     _compilePartial(partial, ctx, hasNestedPartials) {
-        const [key, ...rest] = partial.split(/\s+/);
-        const params = rest.reduce((acc, param) => {
-            const [key, value] = param.split('=');
-            acc[key] = value;
-            return acc;
-        }, {});
+        const [key] = partial.split(/\s+/);
+        const params_re = /[^\s"]+=[^\s"]+|[^\s"]+="[^"]*"/gi;
+        let match;
+        const params = {};
+        while ((match = params_re.exec(partial.slice(key.length).trim()))) {
+            let [prop, value] = match[0].split('=');
+            value = value.replace(/"/g, '');
+            params[prop] = value;
+        }
         const partialCtx = Object.assign(params, ctx);
         if (hasNestedPartials) {
             for (const [key, value] of Object.entries(params)) {
@@ -36,6 +39,11 @@ export class Templator {
             }
         }
         return Templator.partials[key].compile(partialCtx);
+    }
+
+    _getReplaceRegex(str) {
+        str = str.replace('?', '.')
+        return new RegExp(str, 'gi');
     }
 
     _compileTemplate(ctx) {
@@ -48,23 +56,23 @@ export class Templator {
             if (match[1].startsWith('#>')) {
                 const partial = match[1].slice(2).trim();
                 const partialCompiled = this._compilePartial(partial, ctx, true);
-                tmpl = tmpl.replace(new RegExp(match[0], 'gi'), partialCompiled);
+                tmpl = tmpl.replace(this._getReplaceRegex(match[0]), partialCompiled);
                 continue;
             }
             if (match[1].startsWith('>')) {
                 const partial = match[1].slice(1).trim();
                 const partialCompiled = this._compilePartial(partial, ctx);
-                tmpl = tmpl.replace(new RegExp(match[0], 'gi'), partialCompiled);
+                tmpl = tmpl.replace(this._getReplaceRegex(match[0]), partialCompiled);
                 continue;
             }
             const prop = match[1].trim();
             const data = get(ctx, prop, '');
             if (typeof data === 'function') {
                 window[prop] = data;
-                tmpl = tmpl.replace(new RegExp(match[0]), `window.${prop}()`);
+                tmpl = tmpl.replace(this._getReplaceRegex(match[0]), `window.${prop}()`);
                 continue;
             }
-            tmpl = tmpl.replace(new RegExp(match[0], 'gi'), data);
+            tmpl = tmpl.replace(this._getReplaceRegex(match[0]), data);
         }
         return tmpl;
     }
