@@ -32,10 +32,10 @@ export class Templator {
             value = value.replace(/"/g, '');
             params[prop] = value;
         }
-        const partialCtx = Object.assign(params, ctx);
+        const partialCtx = Object.assign({}, ctx, params);
         if (hasNestedPartials) {
-            for (const [key, value] of Object.entries(params)) {
-                params[key] = Templator.partials[value] ? Templator.partials[value].compile(partialCtx) : value;
+            for (const [key, value] of Object.entries(partialCtx)) {
+                partialCtx[key] = Templator.partials[value] ? Templator.partials[value].compile(partialCtx) : value;
             }
         }
         return Templator.partials[key].compile(partialCtx);
