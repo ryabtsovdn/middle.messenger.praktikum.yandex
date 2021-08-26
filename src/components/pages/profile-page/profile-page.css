@@ -1,0 +1,42 @@
+.profile-page {
+    display: flex;
+    min-height: 100vh;
+}
+
+.profile-page__aside {
+    width: 64px;
+    background-color: #fbfbfb;
+    border-right: 1px solid #eaeaea;
+}
+
+.profile-page__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+}
+
+.profile-page__avatar {
+    margin-bottom: 60px;
+}
+
+.profile-page__links {
+    display: flex;
+    flex-direction: column;
+    width: 510px;
+    margin-top: 60px;
+}
+
+.profile-page__link {
+    height: 24px;
+    vertical-align: top;
+    &:not(:last-child) {
+        margin-bottom: 10px;
+        border-bottom: 1px solid #eaeaea;
+    }
+}
+
+.profile-page__avatar-modal .modal__content {
+    margin-left: 32px;
+}
