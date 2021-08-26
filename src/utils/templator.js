@@ -41,9 +41,9 @@ export class Templator {
         return Templator.partials[key].compile(partialCtx);
     }
 
-    _getReplaceRegex(str) {
+    _getReplaceRegex(str, flags = 'gi') {
         str = str.replace('?', '.')
-        return new RegExp(str, 'gi');
+        return new RegExp(str, flags);
     }
 
     _compileTemplate(ctx) {
@@ -51,6 +51,15 @@ export class Templator {
         let tmpl = this._template;
         while ((match = this.TMPL_RE.exec(tmpl))) {
             if (!match[1]) {
+                continue;
+            }
+            if (match[1].startsWith('#if')) {
+                const paramString = match[1].slice(3).trim();
+                const [key, value = true] = paramString.split(' ');
+                const data = get(ctx, key, '');
+                const re = new RegExp(`${match[0]}((?!\/if).*?){{\/if}}`, 'msi');
+                tmpl = tmpl.replace(re, data === value ? '$1' : '');
+                this.TMPL_RE.lastIndex = match.index;
                 continue;
             }
             if (match[1].startsWith('#>')) {
