@@ -6,7 +6,6 @@ export default `
             <li><a href="/login">Вход</a></li>
             <li><a href="/register">Регистрация</a></li>
             <li><a href="/profile">Профиль</a></li>
-            <li><a href="/password">Смена пароля</a></li>
             <li><a href="/404">Страница не найдена</a></li>
             <li><a href="/500">Внутренняя ошибка</a></li>
         </ul>
