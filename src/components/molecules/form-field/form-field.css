@@ -17,3 +17,11 @@
         outline: none;
     }
 }
+
+.form-field_inline {
+    .form-field__input {
+        width: 510px;
+        text-align: right;
+        border-bottom-color: #eaeaea;
+    }
+}
