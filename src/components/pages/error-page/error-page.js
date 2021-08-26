@@ -1,6 +1,7 @@
 import {Templator} from '../../../utils/templator';
-import template from './500-page.tmpl';
-import '../../templates/error-template';
+import template from './error-page.tmpl';
+import '../../atoms/link';
+import './error-page.css';
 
 const tmpl = new Templator(template);
 
