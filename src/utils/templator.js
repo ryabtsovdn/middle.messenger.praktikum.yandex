@@ -24,12 +24,14 @@ export class Templator {
 
     _compilePartial(partial, ctx, hasNestedPartials) {
         const [key] = partial.split(/\s+/);
-        const params_re = /[^\s"]+=[^\s"]+|[^\s"]+="[^"]*"/gi;
+        const params_re = /[^\s"]+=[^\s"]+|[^\s"]+="[^"]*"|[^\s"=]+/gi;
         let match;
         const params = {};
         while ((match = params_re.exec(partial.slice(key.length).trim()))) {
-            let [prop, value] = match[0].split('=');
-            value = value.replace(/"/g, '');
+            let [prop, value = true] = match[0].split('=');
+            if (typeof value === 'string') {
+                value = value.replace(/"/g, '');
+            }
             params[prop] = value;
         }
         const partialCtx = Object.assign({}, ctx, params);
