@@ -13,20 +13,11 @@ export class Templator {
         this._template = template;
     }
 
-    compile(ctx) {
-        return this._compileTemplate(ctx);
-    }
-
-    render(ctx) {
-        const compiled = this.compile(ctx);
-        return new DOMParser().parseFromString(compiled, 'text/html').body.firstChild;
-    }
-
-    _compilePartial(partial, ctx, hasNestedPartials) {
+    _compilePartial(partial, ctx) {
         const [key] = partial.split(/\s+/);
         const params_re = /[^\s"]+=[^\s"]+|[^\s"]+="[^"]*"|[^\s"=]+/gi;
         let match;
-        const params = {};
+        const params = {}, nested = {};
         while ((match = params_re.exec(partial.slice(key.length).trim()))) {
             let [prop, value = true] = match[0].split('=');
             if (typeof value === 'string') {
@@ -35,15 +26,17 @@ export class Templator {
                     value = get(ctx, value.slice(1));
                 }
             }
-            params[prop] = value;
-        }
-        const partialCtx = Object.assign({}, ctx, params);
-        if (hasNestedPartials) {
-            for (const [key, value] of Object.entries(partialCtx)) {
-                partialCtx[key] = Templator.partials[value] ? Templator.partials[value].compile(partialCtx) : value;
+            if (prop.startsWith('&')) {
+                nested[prop.slice(1)] = value;
+            } else {
+                params[prop] = value;
             }
         }
-        return Templator.partials[key].compile(partialCtx);
+        const partialCtx = Object.assign({}, ctx, params);
+        Object.entries(nested).forEach(([prop, value]) => {
+            nested[prop] = Templator.partials[value] ? Templator.partials[value].compile(partialCtx) : value;
+        });
+        return Templator.partials[key].compile(Object.assign(nested, partialCtx));
     }
 
     _compileTemplate(ctx) {
@@ -68,12 +61,6 @@ export class Templator {
                 this.TMPL_RE.lastIndex = match.index;
                 continue;
             }
-            if (match[1].startsWith('#>')) {
-                const partial = match[1].slice(2).trim();
-                const partialCompiled = this._compilePartial(partial, ctx, true);
-                tmpl = tmpl.replace(new RegExp(match[0], 'gi'), partialCompiled);
-                continue;
-            }
             if (match[1].startsWith('>')) {
                 const partial = match[1].slice(1).trim();
                 const partialCompiled = this._compilePartial(partial, ctx);
@@ -92,4 +79,14 @@ export class Templator {
         }
         return tmpl;
     }
+
+    compile(ctx) {
+        return this._compileTemplate(ctx);
+    }
+
+    render(ctx) {
+        const compiled = this.compile(ctx);
+        return new DOMParser().parseFromString(compiled, 'text/html').body.firstChild;
+    }
+
 }

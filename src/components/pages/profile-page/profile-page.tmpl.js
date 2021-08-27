@@ -19,7 +19,7 @@ export default `
                 </div>
             {{/if}}
             {{#if page.state avatar}}
-                {{#> templates-modal content=organisms-avatar-form className=profile-page__avatar-modal}}
+                {{> templates-modal className=profile-page__avatar-modal &content=organisms-avatar-form}}
             {{/if}}
         </main>
     </div>

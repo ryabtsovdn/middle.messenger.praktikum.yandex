@@ -1,3 +1,3 @@
 export default `
-    {{#> templates-chat}}
+    {{> templates-chat}}
 `;
