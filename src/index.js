@@ -18,20 +18,30 @@ const user = {
     avatar,
 };
 
+const onSubmit = function(ev) {
+    ev.preventDefault();
+    navigate('/');
+};
+
+const onSave = function(ev) {
+    ev.preventDefault();
+    navigate('/profile');
+}
+
 const routes = {
     '/': [chat, {}],
-    '/login': [login, {}],
-    '/register': [register, {}],
+    '/login': [login, {page: {onSubmit}}],
+    '/register': [register, {page: {onSubmit}}],
     '/profile': [profile, {page: {state: 'profile'}, form: {hideSubmit: true}, user}],
-    '/profile/edit': [profile, {page: {state: 'edit'}, user}],
-    '/profile/password': [profile, {page: {state: 'password'}, user}],
-    '/profile/avatar': [profile, {page: {state: 'avatar'}, user}],
+    '/profile/edit': [profile, {page: {state: 'edit', onSave}, user}],
+    '/profile/password': [profile, {page: {state: 'password', onSave}, user}],
+    '/profile/avatar': [profile, {page: {state: 'avatar', onSave}, user}],
     '/500': [error, {code: 500, message: 'Мы уже фиксим'}],
     '/404': [error, {code: 404, message: 'Не туда попали'}],
 };
 
-const navigate = async () => {
-    const [page, ctx] = routes[location.pathname] || routes['/404'];
+const navigate = async (path) => {
+    const [page, ctx] = routes[path||location.pathname] || routes['/404'];
     page.then(tmpl => {
         root.replaceChildren(tmpl.render(ctx));
     });

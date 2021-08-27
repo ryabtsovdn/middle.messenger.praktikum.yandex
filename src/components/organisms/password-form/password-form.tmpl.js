@@ -4,7 +4,7 @@ export default `
         {{> molecules-form-field type=password className=form-field_inline label="Новый пароль" name=newPassword}}
         {{> molecules-form-field type=password className=form-field_inline label="Подтвердите новый пароль" name=newPassword_confirm}}
         {{#if !form.hideSubmit}}
-            {{> atoms-button className=profile-form__button text=Сохранить}}
+            {{> atoms-button className=profile-form__button text=Сохранить onClick=.page.onSave}}
         {{/if}}
     </form>
 `;

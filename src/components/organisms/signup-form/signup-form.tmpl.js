@@ -9,7 +9,7 @@ export default `
         {{> molecules-form-field type=password name=password label=Пароль}}
         {{> molecules-form-field type=password name=password_confirm label="Подтвердить пароль"}}
         <div class="auth-form__buttons signup-form__buttons">
-            {{> atoms-button className=auth-form__button text=Зарегистрироваться}}
+            {{> atoms-button className=auth-form__button text=Зарегистрироваться onClick=.page.onSubmit}}
             {{> atoms-link text="Войти" className=auth-form__link href=/login}}
         </div>
     </form>

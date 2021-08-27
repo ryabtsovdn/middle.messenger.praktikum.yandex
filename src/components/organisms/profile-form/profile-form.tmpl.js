@@ -7,7 +7,7 @@ export default `
         {{> molecules-form-field type=text className=form-field_inline label="Имя в чате" name=display_name value=.user.displayName disabled=.form.hideSubmit}}
         {{> molecules-form-field type=text className=form-field_inline label=Телефон name=phone value=.user.phone disabled=.form.hideSubmit}}
         {{#if !form.hideSubmit}}
-            {{> atoms-button className=profile-form__button text=Сохранить}}
+            {{> atoms-button className=profile-form__button text=Сохранить onClick=.page.onSave}}
         {{/if}}
     </form>
 `;
