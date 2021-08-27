@@ -1,3 +1,3 @@
 export default `
-    <input type="{{type}}" class="{{className}}" name={{name}} value={{value}}>
+    <input id="{{name}}" type="{{type}}" class="{{className}}" name="{{name}}" value="{{value}}" placeholder=" ">
 `;
