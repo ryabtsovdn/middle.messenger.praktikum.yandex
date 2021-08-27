@@ -13,13 +13,14 @@ export class Templator {
         this._template = template;
     }
 
-    _compilePartial(partial, ctx) {
+    _processPartial(tmpl, match, ctx) {
+        const partial = match[1].slice(1).trim();
         const [key] = partial.split(/\s+/);
         const params_re = /[^\s"]+=[^\s"]+|[^\s"]+="[^"]*"|[^\s"=]+/gi;
-        let match;
+        let next;
         const params = {}, nested = {};
-        while ((match = params_re.exec(partial.slice(key.length).trim()))) {
-            let [prop, value = true] = match[0].split('=');
+        while ((next = params_re.exec(partial.slice(key.length).trim()))) {
+            let [prop, value = true] = next[0].split('=');
             if (typeof value === 'string') {
                 value = value.replace(/"/g, '');
                 if (value.startsWith('.')) {
@@ -34,9 +35,37 @@ export class Templator {
         }
         const partialCtx = Object.assign({}, ctx, params);
         Object.entries(nested).forEach(([prop, value]) => {
-            nested[prop] = Templator.partials[value] ? Templator.partials[value].compile(partialCtx) : value;
+            nested[prop] = Templator.partials[value] ?
+                Templator.partials[value].compile(partialCtx) : value;
         });
-        return Templator.partials[key].compile(Object.assign(nested, partialCtx));
+        ;
+        return tmpl.replace(new RegExp(match[0].replace('?', '\\?'), 'gi'),
+            Templator.partials[key].compile(Object.assign(nested, partialCtx)));
+    }
+
+    _processConditional(tmpl, match, ctx) {
+        const paramString = match[1].slice(3).trim();
+        let [key, value = true] = paramString.split(' ');
+        let isNegation = false;
+        if (key.startsWith('!')) {
+            isNegation = true;
+            key = key.slice(1);
+        }
+        const data = get(ctx, key, '');
+        const ifRegex = new RegExp(`${match[0]}((?!\/if).*?){{\/if}}`, 'msi');
+        const isVisible = isNegation && data !== value ||
+            !isNegation && data === value;
+        return tmpl.replace(ifRegex, isVisible ? '$1' : '');
+    }
+
+    _processProp(tmpl, match, ctx) {
+        const prop = match[1].trim();
+        const data = get(ctx, prop, '');
+        if (typeof data === 'function') {
+            window[prop] = data;
+            return tmpl.replace(new RegExp(match[0], 'gi'), `window.${prop}(event)`);
+        }
+        return tmpl.replace(new RegExp(match[0], 'gi'), data);
     }
 
     _compileTemplate(ctx) {
@@ -47,34 +76,15 @@ export class Templator {
                 continue;
             }
             if (match[1].startsWith('#if')) {
-                const paramString = match[1].slice(3).trim();
-                let [key, value = true] = paramString.split(' ');
-                let isNegation = false;
-                if (key.startsWith('!')) {
-                    isNegation = true;
-                    key = key.slice(1);
-                }
-                const data = get(ctx, key, '');
-                const re = new RegExp(`${match[0]}((?!\/if).*?){{\/if}}`, 'msi');
-                const isVisible = isNegation && data !== value || !isNegation && data === value;
-                tmpl = tmpl.replace(re, isVisible ? '$1' : '');
+                tmpl = this._processConditional(tmpl, match, ctx);
                 this.TMPL_RE.lastIndex = match.index;
                 continue;
             }
             if (match[1].startsWith('>')) {
-                const partial = match[1].slice(1).trim();
-                const partialCompiled = this._compilePartial(partial, ctx);
-                tmpl = tmpl.replace(new RegExp(match[0].replace('?', '.'), 'gi'), partialCompiled);
+                tmpl = this._processPartial(tmpl, match, ctx);
                 continue;
             }
-            const prop = match[1].trim();
-            const data = get(ctx, prop, '');
-            if (typeof data === 'function') {
-                window[prop] = data;
-                tmpl = tmpl.replace(new RegExp(match[0], 'gi'), `window.${prop}(event)`);
-                continue;
-            }
-            tmpl = tmpl.replace(new RegExp(match[0], 'gi'), data);
+            tmpl = this._processProp(tmpl, match, ctx);
             this.TMPL_RE.lastIndex = match.index;
         }
         return tmpl;
