@@ -1,3 +1,3 @@
 export default `
-    {{#> templates-auth content=organisms-signup-form className=register-page}}
+    {{#> templates-auth className=register-page content=organisms-signup-form}}
 `;
