@@ -88,6 +88,7 @@ export class Templator {
                 continue;
             }
             tmpl = tmpl.replace(new RegExp(match[0], 'gi'), data);
+            this.TMPL_RE.lastIndex = match.index;
         }
         return tmpl;
     }
