@@ -31,6 +31,9 @@ export class Templator {
             let [prop, value = true] = match[0].split('=');
             if (typeof value === 'string') {
                 value = value.replace(/"/g, '');
+                if (value.startsWith('.')) {
+                    value = get(ctx, value.slice(1));
+                }
             }
             params[prop] = value;
         }
