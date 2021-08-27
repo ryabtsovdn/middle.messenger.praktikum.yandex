@@ -84,7 +84,7 @@ export class Templator {
             const data = get(ctx, prop, '');
             if (typeof data === 'function') {
                 window[prop] = data;
-                tmpl = tmpl.replace(new RegExp(match[0], 'gi'), `window.${prop}()`);
+                tmpl = tmpl.replace(new RegExp(match[0], 'gi'), `window.${prop}(event)`);
                 continue;
             }
             tmpl = tmpl.replace(new RegExp(match[0], 'gi'), data);
