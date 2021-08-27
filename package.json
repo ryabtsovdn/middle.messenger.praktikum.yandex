@@ -1,7 +1,8 @@
 {
   "scripts": {
     "dev": "./node_modules/.bin/parcel static/index.html",
-    "build": "./node_modules/.bin/parcel build static/index.html"
+    "build": "./node_modules/.bin/parcel build static/index.html",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -15,6 +16,7 @@
   "homepage": "https://github.com/ryabtsovdn/middle.messenger.praktikum.yandex#readme",
   "devDependencies": {
     "autoprefixer": "^10.3.2",
+    "express": "^4.17.1",
     "parcel": "^2.0.0-rc.0",
     "parcel-plugin-static-files-copy": "^2.6.0",
     "postcss-nested": "^5.0.6"
