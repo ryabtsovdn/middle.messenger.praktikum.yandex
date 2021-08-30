@@ -1,0 +1,21 @@
+.error-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.error-page__code {
+    margin-bottom: 20px;
+    font-size: 40px;
+    font-weight: 500;
+}
+
+.error-page__message {
+    margin-bottom: 70px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.error-page__back {}
