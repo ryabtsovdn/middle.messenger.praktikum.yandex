@@ -1,12 +1,12 @@
 {
   "scripts": {
-    "dev": "./node_modules/.bin/parcel static/index.html",
-    "build": "./node_modules/.bin/parcel build static/index.html",
+    "dev": "parcel static/index.html",
+    "build": "parcel build static/index.html",
     "start": "node server.js",
-    "check": "tsc --noEmit",
-    "eslint": "eslint",
+    "ts:check": "tsc --noEmit",
+    "ts:lint": "eslint src",
     "css:lint": "stylelint src",
-    "css:fix": "postcss --config package.json --replace --no-map src/**/*.css"
+    "css:fix": "postcss --config config --replace --no-map src/**/*.css"
   },
   "repository": {
     "type": "git",
@@ -41,15 +41,5 @@
   "staticFiles": {
     "staticPath": "static",
     "watcherGlob": "**"
-  },
-  "postcss": {
-    "plugins": {
-      "css-declaration-sorter": {
-        "order": "smacss"
-      },
-      "stylelint": {
-        "fix": true
-      }
-    }
   }
 }

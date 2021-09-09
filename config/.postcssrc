@@ -1,0 +1,10 @@
+{
+  "plugins": {
+    "css-declaration-sorter": {
+      "order": "smacss"
+    },
+    "stylelint": {
+      "fix": true
+    }
+  }
+}
