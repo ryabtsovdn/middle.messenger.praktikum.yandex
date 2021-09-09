@@ -1,6 +1,10 @@
 {
     "modules": false,
     "plugins": {
+        "stylelint": {},
+        "postcss-reporter": {
+          "throwError": true
+        },
         "postcss-nested": {},
         "autoprefixer": {}
     }
