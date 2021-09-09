@@ -4,7 +4,9 @@
     "build": "./node_modules/.bin/parcel build static/index.html",
     "start": "node server.js",
     "check": "tsc --noEmit",
-    "eslint": "eslint"
+    "eslint": "eslint",
+    "css:lint": "stylelint src",
+    "css:fix": "postcss --config package.json --replace --no-map src/**/*.css"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "autoprefixer": "^10.3.2",
+    "css-declaration-sorter": "^6.1.3",
     "eslint": "^7.32.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.3.0",
@@ -27,6 +30,7 @@
     "express": "^4.17.1",
     "parcel": "^2.0.0-rc.0",
     "parcel-plugin-static-files-copy": "^2.6.0",
+    "postcss-cli": "^8.3.1",
     "postcss-nested": "^5.0.6",
     "postcss-reporter": "^7.0.2",
     "prettier": "^2.4.0",
@@ -37,5 +41,15 @@
   "staticFiles": {
     "staticPath": "static",
     "watcherGlob": "**"
+  },
+  "postcss": {
+    "plugins": {
+      "css-declaration-sorter": {
+        "order": "smacss"
+      },
+      "stylelint": {
+        "fix": true
+      }
+    }
   }
 }

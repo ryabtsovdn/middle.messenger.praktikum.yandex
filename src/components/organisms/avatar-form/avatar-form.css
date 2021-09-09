@@ -4,9 +4,9 @@
   align-items: center;
   width: 340px;
   padding: 50px 30px 30px;
+  border-radius: 12px;
   background: #fff;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.14);
-  border-radius: 12px;
 }
 
 .avatar-form__button {
@@ -14,8 +14,8 @@
 }
 
 .avatar-form__title {
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 20px;
   margin-bottom: 40px;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
 }

@@ -5,13 +5,13 @@
 
 .profile-page__aside {
   width: 64px;
-  background-color: #fbfbfb;
   border-right: 1px solid #eaeaea;
+  background-color: #fbfbfb;
 }
 
 .profile-page__content {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   padding-top: 60px;

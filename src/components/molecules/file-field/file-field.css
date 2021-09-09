@@ -1,6 +1,6 @@
 .file-field {
-  position: relative;
   display: flex;
+  position: relative;
   width: 122px;
   height: 32px;
   padding: 8px 0;
@@ -12,10 +12,10 @@
 }
 
 .file-field__text {
-  font-size: 12px;
+  color: #3369f3;
   font-weight: 500;
+  font-size: 12px;
   line-height: 16px;
   text-align: center;
   text-decoration: underline;
-  color: #3369f3;
 }

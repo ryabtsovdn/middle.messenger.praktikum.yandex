@@ -6,8 +6,8 @@
 }
 
 .avatar__img {
-  position: relative;
   display: flex;
+  position: relative;
   width: 130px;
   height: 130px;
   margin: auto;
@@ -20,8 +20,9 @@
 }
 
 .avatar__overlay {
-  position: absolute;
   display: flex;
+  visibility: hidden;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -29,25 +30,24 @@
   border-radius: 50%;
   background-color: #000;
   opacity: 0;
-  visibility: hidden;
 
   span {
     width: 64px;
     margin: auto;
+    color: #fff;
     font-size: 13px;
     text-align: center;
-    color: #fff;
   }
 }
 
 .avatar:hover .avatar__overlay {
-  opacity: 0.5;
   visibility: visible;
+  opacity: 0.5;
 }
 
 .avatar__name {
   margin-top: 20px;
-  font-size: 16px;
-  font-weight: 600;
   color: #1e1e1e;
+  font-weight: 600;
+  font-size: 16px;
 }
