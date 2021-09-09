@@ -1,6 +1,8 @@
 import get from './get';
 
 export class Templator {
+    _template: string;
+
     static partials = {};
 
     static addPartial(key, tmpl) {
@@ -24,7 +26,7 @@ export class Templator {
             if (typeof value === 'string') {
                 value = value.replace(/"/g, '');
                 if (value.startsWith('.')) {
-                    value = get(ctx, value.slice(1));
+                    value = get(ctx, value.slice(1), '');
                 }
             }
             if (prop.startsWith('&')) {
@@ -34,7 +36,7 @@ export class Templator {
             }
         }
         const partialCtx = Object.assign({}, ctx, params);
-        Object.entries(nested).forEach(([prop, value]) => {
+        Object.entries(nested).forEach(([prop, value]: [string, any]) => {
             nested[prop] = Templator.partials[value] ?
                 Templator.partials[value].compile(partialCtx) : value;
         });

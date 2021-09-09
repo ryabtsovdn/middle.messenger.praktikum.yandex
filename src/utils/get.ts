@@ -1,4 +1,4 @@
-export default function get(obj, path = '', defaultValue) {
+export default function get(obj: object, path = '', defaultValue: any) {
     const parts = path.split('.');
     let res = obj;
     for (let i = 0; i < parts.length; i++) {

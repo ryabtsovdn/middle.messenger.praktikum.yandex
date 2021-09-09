@@ -18,17 +18,17 @@ const user = {
     avatar,
 };
 
-const onSubmit = function(ev) {
+const onSubmit = function(ev: Event) {
     ev.preventDefault();
     navigate('/');
 };
 
-const onSave = function(ev) {
+const onSave = function(ev: Event) {
     ev.preventDefault();
     navigate('/profile');
 }
 
-const routes = {
+const routes: Record<string, [Promise<any>, object]> = {
     '/': [chat, {}],
     '/login': [login, {page: {onSubmit}}],
     '/register': [register, {page: {onSubmit}}],
@@ -40,10 +40,11 @@ const routes = {
     '/404': [error, {code: 404, message: 'Не туда попали'}],
 };
 
-const navigate = async (path) => {
+const navigate = async (path?: string) => {
     const [page, ctx] = routes[path||location.pathname] || routes['/404'];
     page.then(tmpl => {
-        root.replaceChildren(tmpl.render(ctx));
+        root.innerHTML = '';
+        root.append(tmpl.render(ctx));
     });
 };
 
