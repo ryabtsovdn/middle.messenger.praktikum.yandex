@@ -28,7 +28,11 @@ const onSave = function (ev: Event) {
   navigate('/profile');
 };
 
-const routes: Record<string, [Promise<any>, Record<string, unknown>]> = {
+interface IPage {
+  render: (ctx: Record<string, unknown>) => Element;
+}
+
+const routes: Record<string, [Promise<IPage>, Record<string, unknown>]> = {
   '/': [chat, {}],
   '/login': [login, {page: {onSubmit}}],
   '/register': [register, {page: {onSubmit}}],

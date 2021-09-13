@@ -3,25 +3,29 @@ import get from './get';
 export class Templator {
   _template: string;
 
-  static partials = {};
+  static partials: Record<string, Templator> = {};
 
-  static addPartial(key, tmpl) {
-    Templator.partials[key] = tmpl;
+  static addPartial(key: string, partial: Templator): void {
+    Templator.partials[key] = partial;
   }
 
   TMPL_RE = /\{\{(.*?)\}\}/gi;
 
-  constructor(template) {
+  constructor(template: string) {
     this._template = template;
   }
 
-  _processPartial(tmpl, match, ctx) {
+  _processPartial(
+    tmpl: string,
+    match: RegExpExecArray,
+    ctx: Record<string, unknown>
+  ): string {
     const partial = match[1].slice(1).trim();
     const [key] = partial.split(/\s+/);
     const paramsRegex = /[^\s"]+=[^\s"]+|[^\s"]+="[^"]*"|[^\s"=]+/gi;
     let next;
-    const params = {};
-    const nested = {};
+    const params: Record<string, any> = {};
+    const nested: Record<string, any> = {};
     while ((next = paramsRegex.exec(partial.slice(key.length).trim()))) {
       let [prop, value = true] = next[0].split('=');
       if (typeof value === 'string') {
@@ -37,7 +41,7 @@ export class Templator {
       }
     }
     const partialCtx = Object.assign({}, ctx, params);
-    Object.entries(nested).forEach(([prop, value]: [string, any]) => {
+    Object.entries(nested).forEach(([prop, value]) => {
       nested[prop] = Templator.partials[value]
         ? Templator.partials[value].compile(partialCtx)
         : value;
@@ -48,7 +52,11 @@ export class Templator {
     );
   }
 
-  _processConditional(tmpl, match, ctx) {
+  _processConditional(
+    tmpl: string,
+    match: RegExpExecArray,
+    ctx: Record<string, unknown>
+  ): string {
     const paramString = match[1].slice(3).trim();
     let [key, value = true] = paramString.split(' ');
     let isNegation = false;
@@ -63,17 +71,21 @@ export class Templator {
     return tmpl.replace(ifRegex, isVisible ? '$1' : '');
   }
 
-  _processProp(tmpl, match, ctx) {
+  _processProp(
+    tmpl: string,
+    match: RegExpExecArray,
+    ctx: Record<string, unknown>
+  ): string {
     const prop = match[1].trim();
     const data = get(ctx, prop, '');
     if (typeof data === 'function') {
-      window[prop] = data;
+      window[prop as any] = data;
       return tmpl.replace(new RegExp(match[0], 'gi'), `window.${prop}(event)`);
     }
     return tmpl.replace(new RegExp(match[0], 'gi'), data);
   }
 
-  _compileTemplate(ctx) {
+  _compileTemplate(ctx: Record<string, unknown>): string {
     let match;
     let tmpl = this._template;
     while ((match = this.TMPL_RE.exec(tmpl))) {
@@ -95,13 +107,13 @@ export class Templator {
     return tmpl;
   }
 
-  compile(ctx) {
+  compile(ctx: Record<string, unknown>): string {
     return this._compileTemplate(ctx);
   }
 
-  render(ctx) {
+  render(ctx: Record<string, unknown>): Element {
     const compiled = this.compile(ctx);
     return new DOMParser().parseFromString(compiled, 'text/html').body
-      .firstChild;
+      .firstElementChild;
   }
 }
