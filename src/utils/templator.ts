@@ -1,12 +1,13 @@
 import get from './get';
+import {Block} from './block';
 
 export class Templator {
   _template: string;
 
-  static partials: Record<string, Templator> = {};
+  static partials: Record<string, typeof Block> = {};
 
-  static addPartial(key: string, partial: Templator): void {
-    Templator.partials[key] = partial;
+  static addPartial(key: string, block: typeof Block): void {
+    Templator.partials[key] = block;
   }
 
   TMPL_RE = /\{\{(.*?)\}\}/gi;
@@ -15,17 +16,22 @@ export class Templator {
     this._template = template;
   }
 
+  _createStub(block: Block): string {
+    Block.components[block.id] = block;
+    return `<div data-id="${block.id}"></div>`;
+  }
+
   _processPartial(
     tmpl: string,
     match: RegExpExecArray,
-    ctx: Record<string, unknown>
+    ctx: UnknownObject
   ): string {
     const partial = match[1].slice(1).trim();
     const [key] = partial.split(/\s+/);
     const paramsRegex = /[^\s"]+=[^\s"]+|[^\s"]+="[^"]*"|[^\s"=]+/gi;
     let next;
-    const params: Record<string, any> = {};
-    const nested: Record<string, any> = {};
+    const params: AnyObject = {};
+    const nested: AnyObject = {};
     while ((next = paramsRegex.exec(partial.slice(key.length).trim()))) {
       let [prop, value = true] = next[0].split('=');
       if (typeof value === 'string') {
@@ -42,20 +48,26 @@ export class Templator {
     }
     const partialCtx = Object.assign({}, ctx, params);
     Object.entries(nested).forEach(([prop, value]) => {
-      nested[prop] = Templator.partials[value]
-        ? Templator.partials[value].compile(partialCtx)
-        : value;
+      if (Templator.partials[value]) {
+        const block = new Templator.partials[value](params);
+        nested[prop] = this._createStub(block);
+      } else {
+        nested[prop] = value;
+      }
     });
+    const partialBlock = new Templator.partials[key](
+      Object.assign(nested, partialCtx)
+    );
     return tmpl.replace(
       new RegExp(match[0].replace('?', '\\?'), 'gi'),
-      Templator.partials[key].compile(Object.assign(nested, partialCtx))
+      this._createStub(partialBlock)
     );
   }
 
   _processConditional(
     tmpl: string,
     match: RegExpExecArray,
-    ctx: Record<string, unknown>
+    ctx: UnknownObject
   ): string {
     const paramString = match[1].slice(3).trim();
     let [key, value = true] = paramString.split(' ');
@@ -74,7 +86,7 @@ export class Templator {
   _processProp(
     tmpl: string,
     match: RegExpExecArray,
-    ctx: Record<string, unknown>
+    ctx: UnknownObject
   ): string {
     const prop = match[1].trim();
     const data = get(ctx, prop, '');
@@ -85,7 +97,7 @@ export class Templator {
     return tmpl.replace(new RegExp(match[0], 'gi'), data);
   }
 
-  _compileTemplate(ctx: Record<string, unknown>): string {
+  _compileTemplate(ctx: UnknownObject): string {
     let match;
     let tmpl = this._template;
     while ((match = this.TMPL_RE.exec(tmpl))) {
@@ -99,6 +111,7 @@ export class Templator {
       }
       if (match[1].startsWith('>')) {
         tmpl = this._processPartial(tmpl, match, ctx);
+        this.TMPL_RE.lastIndex = match.index;
         continue;
       }
       tmpl = this._processProp(tmpl, match, ctx);
@@ -107,11 +120,11 @@ export class Templator {
     return tmpl;
   }
 
-  compile(ctx: Record<string, unknown>): string {
+  compile(ctx: UnknownObject): string {
     return this._compileTemplate(ctx);
   }
 
-  render(ctx: Record<string, unknown>): Element {
+  render(ctx: UnknownObject): Element {
     const compiled = this.compile(ctx);
     return new DOMParser().parseFromString(compiled, 'text/html').body
       .firstElementChild;

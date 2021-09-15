@@ -41,5 +41,8 @@
   "staticFiles": {
     "staticPath": "static",
     "watcherGlob": "**"
+  },
+  "dependencies": {
+    "nanoid": "^3.1.25"
   }
 }
