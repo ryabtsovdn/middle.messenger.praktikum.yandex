@@ -1,8 +1,14 @@
 import {Templator} from '../../../utils/templator';
+import {Block} from '../../../utils/block';
 import template from './input.tmpl';
 import './input.css';
 
 const tmpl = new Templator(template);
-Templator.addPartial('atoms-input', tmpl);
 
-export const render = tmpl.render.bind(tmpl);
+export class Input extends Block {
+  render(): string {
+    return tmpl.compile(this.props);
+  }
+}
+
+Templator.addPartial('atoms-input', Input);

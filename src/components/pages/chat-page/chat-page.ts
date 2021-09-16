@@ -1,7 +1,13 @@
 import {Templator} from '../../../utils/templator';
+import {Block} from '../../../utils/block';
 import template from './chat-page.tmpl';
-import '../../templates/chat-template';
+import '../../atoms/link';
+import './chat-page.css';
 
 const tmpl = new Templator(template);
 
-export const render = tmpl.render.bind(tmpl);
+export class ChatPage extends Block {
+  render(): string {
+    return tmpl.compile(this.props);
+  }
+}

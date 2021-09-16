@@ -1,4 +1,5 @@
 import {Templator} from '../../../utils/templator';
+import {Block} from '../../../utils/block';
 import template from './profile-page.tmpl';
 import '../../atoms/link';
 import '../../organisms/avatar';
@@ -10,4 +11,8 @@ import './profile-page.css';
 
 const tmpl = new Templator(template);
 
-export const render = tmpl.render.bind(tmpl);
+export class ProfilePage extends Block {
+  render(): string {
+    return tmpl.compile(this.props);
+  }
+}

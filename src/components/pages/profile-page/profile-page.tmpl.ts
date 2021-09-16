@@ -1,9 +1,9 @@
 export default `
-    <div class="profile-page">
+    <main class="profile-page">
         <aside class="profile-page__aside">
             {{> atoms-link href="/" className="profile-page__back" text=""}}
         </aside>
-        <main class="profile-page__content">
+        <article class="profile-page__content">
             {{> organisms-avatar className=profile-page__avatar}}
             {{#if !page.state password}}
                 {{> organisms-profile-form}}
@@ -21,6 +21,6 @@ export default `
             {{#if page.state avatar}}
                 {{> templates-modal className=profile-page__avatar-modal &content=organisms-avatar-form}}
             {{/if}}
-        </main>
-    </div>
+        </article>
+    </main>
 `;
