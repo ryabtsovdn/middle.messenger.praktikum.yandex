@@ -4,7 +4,7 @@ export default `
             {{> atoms-link href="/" className="profile-page__back" text=""}}
         </aside>
         <article class="profile-page__content">
-            {{> organisms-avatar className=profile-page__avatar}}
+            {{> organisms-avatar className="profile-page__avatar"}}
             {{#if !page.state password}}
                 {{> organisms-profile-form}}
             {{/if}}
@@ -19,7 +19,7 @@ export default `
                 </div>
             {{/if}}
             {{#if page.state avatar}}
-                {{> templates-modal className=profile-page__avatar-modal &content=organisms-avatar-form}}
+                {{> templates-modal className="profile-page__avatar-modal" &content="organisms-avatar-form"}}
             {{/if}}
         </article>
     </main>

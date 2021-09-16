@@ -1,5 +1,5 @@
 export default `
-    <a href=/profile/avatar class="avatar {{className}}">
+    <a href="/profile/avatar" class="avatar {{className}}">
         <div class="avatar__img">
             <img src="{{user.avatar}}">
             <div class="avatar__overlay">

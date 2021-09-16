@@ -1,5 +1,5 @@
 export default `
-    <a href="{{href}}" onclick="{{onClick}}" class="link {{className}}">
+    <a href="{{href}}" class="link {{className}}">
         {{text}}
     </a>
 `;
