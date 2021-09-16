@@ -106,6 +106,8 @@ export class Block {
   }
 
   _removeEvents(): void {
+    if (!this.element) return;
+
     const {events = {}} = this.props;
 
     for (const [event, listener] of Object.entries(events)) {
