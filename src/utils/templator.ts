@@ -46,18 +46,18 @@ export class Templator {
         params[prop] = value;
       }
     }
-    const partialCtx = Object.assign({}, ctx, params);
     Object.entries(nested).forEach(([prop, value]) => {
       if (Templator.partials[value]) {
-        const block = new Templator.partials[value](params);
+        const block = new Templator.partials[value](
+          params[`.${prop}`] || params
+        );
         nested[prop] = this._createStub(block);
       } else {
         nested[prop] = value;
       }
     });
-    const partialBlock = new Templator.partials[key](
-      Object.assign(nested, partialCtx)
-    );
+    const partialCtx = Object.assign(nested, params);
+    const partialBlock = new Templator.partials[key](partialCtx);
     return tmpl.replace(
       new RegExp(match[0].replace('?', '\\?'), 'gi'),
       this._createStub(partialBlock)
@@ -90,10 +90,6 @@ export class Templator {
   ): string {
     const prop = match[1].trim();
     const data = get(ctx, prop, '');
-    if (typeof data === 'function') {
-      window[prop as any] = data;
-      return tmpl.replace(new RegExp(match[0], 'gi'), `window.${prop}(event)`);
-    }
     return tmpl.replace(new RegExp(match[0], 'gi'), data);
   }
 
