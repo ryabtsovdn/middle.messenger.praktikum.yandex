@@ -19,7 +19,7 @@ const user = {
   firstName: 'Иван',
   secondName: 'Иванов',
   displayName: 'Иван',
-  phone: '+7 (999) 999 99 99',
+  phone: '+79999999999',
   avatar,
 };
 
@@ -29,13 +29,9 @@ export class ProfilePage extends Block {
       hideSubmit: props.state === 'profile',
       user,
       form: {
-        events: {
-          submit: function (event: SubmitEvent) {
-            event.preventDefault();
-            console.log(serializeForm(event.target as HTMLFormElement));
-            window.history.pushState(null, '', '/profile');
-            dispatchEvent(new PopStateEvent('popstate'));
-          },
+        onSubmit: () => {
+          window.history.pushState(null, '', '/profile');
+          dispatchEvent(new PopStateEvent('popstate'));
         },
       },
     });

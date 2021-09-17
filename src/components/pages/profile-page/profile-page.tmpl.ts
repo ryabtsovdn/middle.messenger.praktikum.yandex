@@ -6,10 +6,10 @@ export default `
         <article class="profile-page__content">
             {{> organisms-avatar className="profile-page__avatar" user=.user}}
             {{#if !state password}}
-                {{> organisms-profile-form user=.user events=.form.events hideSubmit=.hideSubmit}}
+                {{> organisms-profile-form user=.user onSubmit=.form.onSubmit hideSubmit=.hideSubmit}}
             {{/if}}
             {{#if state password}}
-                {{> organisms-password-form user=.user events=.form.events}}
+                {{> organisms-password-form user=.user onSubmit=.form.onSubmit }}
             {{/if}}
             {{#if state profile}}
                 <div class="profile-page__links">
