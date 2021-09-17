@@ -20,6 +20,7 @@
         "prettier"
     ],
     "rules": {
-      "require-jsdoc": 0
+      "require-jsdoc": 0,
+      "@typescript-eslint/ban-ts-comment": "off"
     }
 }
