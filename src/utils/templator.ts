@@ -98,7 +98,7 @@ export class Templator {
     let data = get(ctx, key, '');
     if (value === undefined) {
       value = true;
-      data = !!data;
+      data = ![null, false, undefined, ''].some(v => v === data);
     }
 
     const ifRegex = new RegExp(`${match[0]}((?!/if).*?){{/if}}`, 'msi');
