@@ -1,0 +1,8 @@
+.messages-list {
+  width: 100%;
+}
+
+.messages-list__item {
+  display: flex;
+  justify-content: space-between;
+}

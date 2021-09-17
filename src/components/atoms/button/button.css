@@ -12,3 +12,16 @@
   font-weight: 500;
   font-size: 13px;
 }
+
+.button--arrow {
+  width: auto;
+  background-color: transparent;
+
+  &::after {
+    display: block;
+    width: 28px;
+    height: 28px;
+    background-image: url("./arrow.svg");
+    content: "";
+  }
+}
