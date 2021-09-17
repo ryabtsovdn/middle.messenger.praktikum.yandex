@@ -1,6 +1,5 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import serializeForm from '../../../utils/serialize-form';
 import template from './profile-page.tmpl';
 import avatar from 'url:../../../../static/img/default-user.svg';
 import '../../atoms/link';

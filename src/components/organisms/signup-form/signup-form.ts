@@ -34,7 +34,7 @@ export class SignUpForm extends Block {
           event.preventDefault();
           console.log(serializeForm(event.target as HTMLFormElement));
 
-          const formInputs = (this as Block).element.querySelectorAll(
+          const formInputs = (this.element as HTMLElement).querySelectorAll(
             '.form-field__input'
           ) as NodeListOf<FormElement>;
 

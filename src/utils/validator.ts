@@ -48,8 +48,8 @@ export class Validator {
   };
 
   _rules: Record<string, IValidationRule>;
-  onError: (element: FormElement, error: string) => void;
-  onSuccess: (element: FormElement) => void;
+  onError?: (element: FormElement, error: string) => void;
+  onSuccess?: (element: FormElement) => void;
 
   constructor(options: IValidatorOptions) {
     this._rules = options.rules;
@@ -70,10 +70,14 @@ export class Validator {
         if (!value) err = 'Поле обязательно для заполнения';
         break;
       case 'min':
-        if (value.length < data) err = `Длина должна быть больше ${data}`;
+        if (data && value.length < data) {
+          err = `Длина должна быть больше ${data}`;
+        }
         break;
       case 'max':
-        if (value.length > data) err = `Длина должна быть меньше ${data}`;
+        if (data && value.length > data) {
+          err = `Длина должна быть меньше ${data}`;
+        }
         break;
       case 'match':
         if (!(data as RegExp).test(value)) err = rule.desc || 'Неверный формат';

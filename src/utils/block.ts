@@ -49,6 +49,7 @@ export class Block {
     this.componentDidMount(props);
   }
 
+  // @ts-ignore
   componentDidMount(props: UnknownObject): void {
     // Could be defined by user
   }
@@ -61,7 +62,9 @@ export class Block {
   }
 
   componentDidUpdate(
+    // @ts-ignore
     oldProps: UnknownObject,
+    // @ts-ignore
     newProps: UnknownObject
   ): boolean {
     // Could be defined by user
