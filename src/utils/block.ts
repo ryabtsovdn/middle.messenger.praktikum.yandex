@@ -46,8 +46,8 @@ export class Block {
   }
 
   _componentDidMount(props: UnknownObject): void {
-    this.componentDidMount(props);
     this.eventBus.emit(Block.EVENTS.FLOW_RENDER);
+    this.componentDidMount(props);
   }
 
   componentDidMount(props: UnknownObject): void {

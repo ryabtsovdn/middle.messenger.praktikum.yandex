@@ -4,5 +4,6 @@ export default `
         <label class="form-field__label" for={{name}}>
             {{label}}
         </label>
+        <label class="validate__error" for={{name}}></label>
     </div>
 `;
