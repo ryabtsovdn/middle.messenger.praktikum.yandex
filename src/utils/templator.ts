@@ -21,31 +21,32 @@ export class Templator {
     return `<div data-id="${block.id}"></div>`;
   }
 
-  _processPartial(
-    tmpl: string,
-    match: RegExpExecArray,
+  _processParams(
+    paramsStr: string,
     ctx: UnknownObject
-  ): string {
-    const partial = match[1].slice(1).trim();
-    const [key] = partial.split(/\s+/);
+  ): {nested: AnyObject; params: AnyObject} {
     const paramsRegex = /[^\s"]+=[^\s"]+|[^\s"]+="[^"]*"|[^\s"=]+/gi;
+
     let next;
     const params: AnyObject = {};
     const nested: AnyObject = {};
-    while ((next = paramsRegex.exec(partial.slice(key.length).trim()))) {
+    while ((next = paramsRegex.exec(paramsStr))) {
       let [prop, value = true] = next[0].split('=');
+
       if (typeof value === 'string') {
         value = value.replace(/"/g, '');
         if (value.startsWith('.')) {
           value = get(ctx, value.slice(1), '');
         }
       }
+
       if (prop.startsWith('&')) {
         nested[prop.slice(1)] = value;
       } else {
         params[prop] = value;
       }
     }
+
     Object.entries(nested).forEach(([prop, value]) => {
       if (Templator.partials[value]) {
         const block = new Templator.partials[value](
@@ -56,8 +57,25 @@ export class Templator {
         nested[prop] = value;
       }
     });
+
+    return {nested, params};
+  }
+
+  _processPartial(
+    tmpl: string,
+    match: RegExpExecArray,
+    ctx: UnknownObject
+  ): string {
+    const partialStr = match[1].slice(1).trim();
+    const [key] = partialStr.split(/\s+/);
+    const {nested, params} = this._processParams(
+      partialStr.slice(key.length).trim(),
+      ctx
+    );
+
     const partialCtx = Object.assign(nested, params);
     const partialBlock = new Templator.partials[key](partialCtx);
+
     return tmpl.replace(
       new RegExp(match[0].replace('?', '\\?'), 'gi'),
       this._createStub(partialBlock)
@@ -70,17 +88,25 @@ export class Templator {
     ctx: UnknownObject
   ): string {
     const paramString = match[1].slice(3).trim();
-    let [key, value = true] = paramString.split(' ');
-    let isNegation = false;
-    if (key.startsWith('!')) {
-      isNegation = true;
+    let [key, value] = paramString.split(' ') as [string, string | boolean];
+
+    const isNegation = key.startsWith('!');
+    if (isNegation) {
       key = key.slice(1);
     }
-    const data = get(ctx, key, '');
+
+    let data = get(ctx, key, '');
+    if (value === undefined) {
+      value = true;
+      data = !!data;
+    }
+
     const ifRegex = new RegExp(`${match[0]}((?!/if).*?){{/if}}`, 'msi');
     const isVisible =
       (isNegation && data !== value) || (!isNegation && data === value);
-    return tmpl.replace(ifRegex, isVisible ? '$1' : '');
+    const ifMatch = tmpl.match(ifRegex);
+
+    return tmpl.replace(ifRegex, isVisible && ifMatch ? ifMatch[1] : '');
   }
 
   _processProp(
@@ -90,7 +116,30 @@ export class Templator {
   ): string {
     const prop = match[1].trim();
     const data = get(ctx, prop, '');
+
     return tmpl.replace(new RegExp(match[0], 'gi'), data);
+  }
+
+  _processList(
+    tmpl: string,
+    match: RegExpExecArray,
+    ctx: UnknownObject
+  ): string {
+    const key = match[1].slice(5).trim();
+
+    const list = get(ctx, key, '');
+    const eachRegex = new RegExp(`${match[0]}((?!/if).*?){{/each}}`, 'msi');
+    const eachMatch = tmpl.match(eachRegex) || [];
+    const inner = (eachMatch[1] || '').trim();
+
+    let listTmpl = '';
+    for (let index = 0; index < list.length; index++) {
+      listTmpl += inner
+        .replace('#this', `.${key}.${index}`)
+        .replace('#index', `${index}`);
+    }
+
+    return tmpl.replace(eachRegex, listTmpl);
   }
 
   _compileTemplate(ctx: UnknownObject): string {
@@ -100,29 +149,34 @@ export class Templator {
       if (!match[1]) {
         continue;
       }
+
+      if (match[1].startsWith('#each')) {
+        tmpl = this._processList(tmpl, match, ctx);
+        this.TMPL_RE.lastIndex = match.index;
+        continue;
+      }
+
       if (match[1].startsWith('#if')) {
         tmpl = this._processConditional(tmpl, match, ctx);
         this.TMPL_RE.lastIndex = match.index;
         continue;
       }
+
       if (match[1].startsWith('>')) {
         tmpl = this._processPartial(tmpl, match, ctx);
         this.TMPL_RE.lastIndex = match.index;
         continue;
       }
+
       tmpl = this._processProp(tmpl, match, ctx);
       this.TMPL_RE.lastIndex = match.index;
     }
+
     return tmpl;
   }
 
   compile(ctx: UnknownObject): string {
-    return this._compileTemplate(ctx);
-  }
-
-  render(ctx: UnknownObject): Element {
-    const compiled = this.compile(ctx);
-    return new DOMParser().parseFromString(compiled, 'text/html').body
-      .firstElementChild;
+    const compiled = this._compileTemplate(ctx);
+    return compiled;
   }
 }
