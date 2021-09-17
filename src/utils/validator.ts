@@ -95,8 +95,8 @@ export class Validator {
     element.classList.remove('validate--invalid');
   }
 
-  validateAll(elements: FormElement[]): boolean {
-    return elements.every(element => this.validate(element));
+  validateAll(targets: FormElement[]): boolean {
+    return targets.map(target => this.validate(target)).every(v => v);
   }
 
   validate(target: FormElement): boolean {
@@ -109,21 +109,20 @@ export class Validator {
     let isValid = true;
     let error = '';
     for (const type of Object.keys(rule)) {
-      if (!isValid) continue;
-
       error = this._getError({rule, type, value});
 
       if (error) {
         isValid = false;
+        break;
       }
     }
 
     if (!isValid) {
       this._onError(element, error);
-      return false;
+    } else {
+      this._onSuccess(element);
     }
 
-    this._onSuccess(element);
-    return true;
+    return isValid;
   }
 }
