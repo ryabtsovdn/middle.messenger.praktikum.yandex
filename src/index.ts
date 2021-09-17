@@ -1,3 +1,4 @@
+import {Block} from './utils/block';
 import {LoginPage} from './components/pages/login-page';
 import {ChatPage} from './components/pages/chat-page';
 import {RegisterPage} from './components/pages/register-page';
@@ -6,11 +7,7 @@ import {ErrorPage} from './components/pages/error-page';
 
 const root = document.getElementById('root');
 
-export interface IBlock {
-  getContent: () => HTMLElement;
-}
-
-const routes: Record<string, IBlock> = {
+const routes: Record<string, Block> = {
   '/': new ChatPage(),
   '/login': new LoginPage(),
   '/register': new RegisterPage(),
@@ -24,8 +21,11 @@ const routes: Record<string, IBlock> = {
 
 const navigate = async (path?: string) => {
   const page = routes[path || location.pathname] || routes['/404'];
-  root.innerHTML = '';
-  root.append(page.getContent());
+  if (root) {
+    root.innerHTML = '';
+    const content = page.element as HTMLElement;
+    root.append(content);
+  }
 };
 
 window.onpopstate = () => {
