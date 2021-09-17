@@ -5,6 +5,7 @@
     "postcss-reporter": {
       "throwError": true
     },
+    "postcss-url": {},
     "postcss-nested": {},
     "autoprefixer": {}
   }
