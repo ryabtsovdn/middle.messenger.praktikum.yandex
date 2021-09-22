@@ -1,0 +1,17 @@
+.message {
+  min-width: 100px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.message--to {
+  margin-left: auto;
+  border-bottom-right-radius: 0;
+  background-color: #e4edfd;
+}
+
+.message--from {
+  border-top-left-radius: 0;
+  background-color: #f8f8f8;
+}

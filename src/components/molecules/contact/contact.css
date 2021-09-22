@@ -1,0 +1,33 @@
+.contact {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e4edfd;
+  }
+}
+
+.contact__avatar {
+  margin-right: 10px;
+  overflow: hidden;
+
+  img {
+    border-radius: 50%;
+  }
+}
+
+.contact__info {
+  flex: 1;
+}
+
+.contact__name {
+  font-weight: bold;
+}
+
+.contact__last {
+  color: #999;
+}

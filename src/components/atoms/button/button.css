@@ -1,14 +1,27 @@
 .button {
-    width: 280px;
-    height: 37px;
-    background-color: #3369f3;
-    outline: none;
-    border: none;
-    border-radius: 8px;
+  width: 280px;
+  height: 37px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background-color: #3369f3;
 }
 
 .button span {
-    font-size: 13px;
-    font-weight: 500;
-    color: #ffffff;
+  color: #fff;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.button--arrow {
+  width: auto;
+  background-color: transparent;
+
+  &::after {
+    display: block;
+    width: 28px;
+    height: 28px;
+    background-image: url("./arrow.svg");
+    content: "";
+  }
 }
