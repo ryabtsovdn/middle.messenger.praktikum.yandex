@@ -8,7 +8,10 @@
         "google",
         "plugin:@typescript-eslint/recommended",
         "prettier",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:mocha/recommended",
+        "plugin:chai-expect/recommended",
+        "plugin:promise/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -17,7 +20,10 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "prettier"
+        "prettier",
+        "mocha",
+        "chai-expect",
+        "promise"
     ],
     "rules": {
       "require-jsdoc": 0,
