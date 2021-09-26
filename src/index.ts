@@ -1,35 +1,20 @@
-import {Block} from './utils/block';
-import {LoginPage} from './components/pages/login-page';
 import {ChatPage} from './components/pages/chat-page';
+import {LoginPage} from './components/pages/login-page';
 import {RegisterPage} from './components/pages/register-page';
 import {ProfilePage} from './components/pages/profile-page';
 import {ErrorPage} from './components/pages/error-page';
+import {Router} from './utils/router';
 
-const root = document.getElementById('root');
+const router = new Router('#root');
 
-const routes: Record<string, Block> = {
-  '/': new ChatPage(),
-  '/login': new LoginPage(),
-  '/register': new RegisterPage(),
-  '/profile': new ProfilePage({state: 'profile'}),
-  '/profile/edit': new ProfilePage({state: 'edit'}),
-  '/profile/password': new ProfilePage({state: 'password'}),
-  '/profile/avatar': new ProfilePage({state: 'avatar'}),
-  '/500': new ErrorPage({code: 500, message: 'Мы уже фиксим'}),
-  '/404': new ErrorPage({code: 404, message: 'Не туда попали'}),
-};
-
-const navigate = async (path?: string) => {
-  const page = routes[path || location.pathname] || routes['/404'];
-  if (root) {
-    root.innerHTML = '';
-    const content = page.element as HTMLElement;
-    root.append(content);
-  }
-};
-
-window.onpopstate = () => {
-  navigate();
-};
-
-navigate();
+router
+  .use('/', ChatPage)
+  .use('/login', LoginPage)
+  .use('/register', RegisterPage)
+  .use('/profile', ProfilePage, {state: 'profile'})
+  .use('/profile/edit', ProfilePage, {state: 'edit'})
+  .use('/profile/password', ProfilePage, {state: 'password'})
+  .use('/profile/avatar', ProfilePage, {state: 'avatar'})
+  .use('/500', ErrorPage, {code: 500, message: 'Мы уже фиксим'})
+  .use('/404', ErrorPage, {code: 404, message: 'Не туда попали'})
+  .start();
