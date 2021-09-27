@@ -2,7 +2,7 @@ export default `
     <main class="chat-page">
         <aside class="chat-page__sidebar">
             <div class="chat-page__profile">
-                {{> atoms-link href="/profile" text="Профиль >"}}
+                {{> atoms-link href="/settings" text="Профиль >"}}
             </div>
             {{> organisms-search-form}}
             {{> organisms-contacts-list contacts=.contacts active=.active setActive=.setActive}}
@@ -14,8 +14,8 @@ export default `
                 <h2>Ссылки на остальные страницы:</h2>
                 <ul>
                     <li>{{> atoms-link href="/login" text="Вход"}}</li>
-                    <li>{{> atoms-link href="/register" text="Регистрация"}}</li>
-                    <li>{{> atoms-link href="/profile" text="Профиль"}}</li>
+                    <li>{{> atoms-link href="/sign-up" text="Регистрация"}}</li>
+                    <li>{{> atoms-link href="/settings" text="Профиль"}}</li>
                     <li>{{> atoms-link href="/404" text="Страница не найдена"}}</li>
                     <li>{{> atoms-link href="/500" text="Внутренняя ошибка"}}</li>
                 </ul>

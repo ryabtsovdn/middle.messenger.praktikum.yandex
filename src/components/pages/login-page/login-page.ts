@@ -11,7 +11,7 @@ export class LoginPage extends Block {
     return tmpl.compile({
       form: {
         onSubmit: () => {
-          window.history.pushState(null, '', '/');
+          window.history.pushState(null, '', '/messenger');
           dispatchEvent(new PopStateEvent('popstate'));
         },
       },

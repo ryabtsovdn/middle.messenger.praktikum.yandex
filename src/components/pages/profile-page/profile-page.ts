@@ -29,7 +29,7 @@ export class ProfilePage extends Block {
       user,
       form: {
         onSubmit: () => {
-          window.history.pushState(null, '', '/profile');
+          window.history.pushState(null, '', '/settings');
           dispatchEvent(new PopStateEvent('popstate'));
         },
       },

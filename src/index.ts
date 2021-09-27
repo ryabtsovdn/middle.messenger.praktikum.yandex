@@ -8,13 +8,14 @@ import {Router} from './utils/router';
 const router = new Router('#root');
 
 router
-  .use('/', ChatPage)
+  .use('/', LoginPage)
   .use('/login', LoginPage)
-  .use('/register', RegisterPage)
-  .use('/profile', ProfilePage, {state: 'profile'})
-  .use('/profile/edit', ProfilePage, {state: 'edit'})
-  .use('/profile/password', ProfilePage, {state: 'password'})
-  .use('/profile/avatar', ProfilePage, {state: 'avatar'})
+  .use('/sign-up', RegisterPage)
+  .use('/messenger', ChatPage)
+  .use('/settings', ProfilePage, {state: 'profile'})
+  .use('/settings/edit', ProfilePage, {state: 'edit'})
+  .use('/settings/password', ProfilePage, {state: 'password'})
+  .use('/settings/avatar', ProfilePage, {state: 'avatar'})
   .use('/500', ErrorPage, {code: 500, message: 'Мы уже фиксим'})
   .use('/404', ErrorPage, {code: 404, message: 'Не туда попали'})
   .start();

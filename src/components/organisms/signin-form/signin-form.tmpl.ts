@@ -5,7 +5,7 @@ export default `
         {{> molecules-form-field className="validate" type="password" name="password" label="Пароль"}}
         <div class="auth-form__buttons signin-form__buttons">
             {{> atoms-button className="auth-form__button" text="Войти"}}
-            {{> atoms-link href="/register" text="Нет аккаунта?" className="auth-form__link"}}
+            {{> atoms-link href="/sign-up" text="Нет аккаунта?" className="auth-form__link"}}
         </div>
     </form>
 `;

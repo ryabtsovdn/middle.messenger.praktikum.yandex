@@ -1,7 +1,7 @@
 export default `
     <main class="profile-page">
         <aside class="profile-page__aside">
-            {{> atoms-link href="/" className="profile-page__back" text=""}}
+            {{> atoms-link href="/messenger" className="profile-page__back" text=""}}
         </aside>
         <article class="profile-page__content">
             {{> organisms-avatar className="profile-page__avatar" user=.user}}
@@ -13,8 +13,8 @@ export default `
             {{/if}}
             {{#if state profile}}
                 <div class="profile-page__links">
-                    {{> atoms-link href="/profile/edit" className="profile-page__link" text="Изменить данные"}}
-                    {{> atoms-link href="/profile/password" className="profile-page__link" text="Изменить пароль"}}
+                    {{> atoms-link href="/settings/edit" className="profile-page__link" text="Изменить данные"}}
+                    {{> atoms-link href="/settings/password" className="profile-page__link" text="Изменить пароль"}}
                     {{> atoms-link href="/" className="profile-page__link link_danger" text="Выйти"}}
                 </div>
             {{/if}}
