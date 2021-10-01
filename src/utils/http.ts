@@ -11,9 +11,17 @@ type Options = {
   headers?: Record<string, string>;
   data?: any;
   timeout?: number;
+  responseType?: XMLHttpRequestResponseType;
+  withCredentials?: boolean;
 };
 
 type OptionsWithoutMethod = Omit<Options, 'method'>;
+
+export type Response<T = unknown> = {
+  status: number;
+  statusText: string;
+  data: T;
+};
 
 const queryStringify = (obj: Record<string, any>) => {
   const keys = Object.keys(obj);
@@ -30,80 +38,123 @@ const queryStringify = (obj: Record<string, any>) => {
 const isObject = (data: any): boolean =>
   typeof data === 'object' && data !== null && !Array.isArray(data);
 
-export class HTTPTransport {
-  get(
+function createResponse<T>(xhr: XMLHttpRequest): Response<T> {
+  return {
+    status: xhr.status,
+    statusText: xhr.statusText,
+    data: xhr.response,
+  };
+}
+
+export default class HTTPTransport {
+  static BASE_URL = 'https://ya-praktikum.tech/api/v2';
+
+  private _apiURL: string;
+
+  constructor(pathname: string) {
+    this._apiURL = HTTPTransport.BASE_URL + pathname;
+  }
+
+  get<DataType>(
     url: string,
     options: OptionsWithoutMethod = {}
-  ): Promise<XMLHttpRequest> {
+  ): Promise<Response<DataType>> {
     if (options.data && isObject(options.data)) {
       url += queryStringify(options.data);
     }
-    return this.request(url, {...options, method: METHOD.GET}, options.timeout);
+    return this.request<DataType>(
+      url,
+      {...options, method: METHOD.GET},
+      options.timeout
+    );
   }
 
-  post(
+  post<DataType>(
     url: string,
     options: OptionsWithoutMethod = {}
-  ): Promise<XMLHttpRequest> {
-    return this.request(
+  ): Promise<Response<DataType>> {
+    return this.request<DataType>(
       url,
       {...options, method: METHOD.POST},
       options.timeout
     );
   }
 
-  put(
+  put<DataType>(
     url: string,
     options: OptionsWithoutMethod = {}
-  ): Promise<XMLHttpRequest> {
-    return this.request(url, {...options, method: METHOD.PUT}, options.timeout);
+  ): Promise<Response<DataType>> {
+    return this.request<DataType>(
+      url,
+      {...options, method: METHOD.PUT},
+      options.timeout
+    );
   }
 
-  patch(
+  patch<DataType>(
     url: string,
     options: OptionsWithoutMethod = {}
-  ): Promise<XMLHttpRequest> {
-    return this.request(
+  ): Promise<Response<DataType>> {
+    return this.request<DataType>(
       url,
       {...options, method: METHOD.PATCH},
       options.timeout
     );
   }
 
-  delete(
+  delete<DataType>(
     url: string,
     options: OptionsWithoutMethod = {}
-  ): Promise<XMLHttpRequest> {
-    return this.request(
+  ): Promise<Response<DataType>> {
+    return this.request<DataType>(
       url,
       {...options, method: METHOD.DELETE},
       options.timeout
     );
   }
 
-  request(
+  request<DataType>(
     url: string,
     options: Options = {method: METHOD.GET},
     timeout = 5000
-  ): Promise<XMLHttpRequest> {
-    const {method, data, headers = {}} = options;
+  ): Promise<Response<DataType>> {
+    const {
+      method,
+      data,
+      headers = {},
+      responseType = 'json',
+      withCredentials = true,
+    } = options;
+    url = `${this._apiURL}${url}`;
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-
       xhr.open(method, url);
+
+      xhr.setRequestHeader('Content-Type', 'application/json');
       for (const [header, value] of Object.entries(headers)) {
         xhr.setRequestHeader(header, value);
       }
 
+      xhr.withCredentials = withCredentials;
+      xhr.responseType = responseType;
+
       xhr.onload = function () {
-        resolve(xhr);
+        if (xhr.status >= 400 && xhr.status <= 599) {
+          reject(createResponse<DataType>(xhr));
+        } else {
+          resolve(createResponse<DataType>(xhr));
+        }
       };
 
-      xhr.onabort = reject;
-      xhr.onerror = reject;
-      xhr.ontimeout = reject;
+      function handleError(): void {
+        reject(createResponse<DataType>(xhr));
+      }
+
       xhr.timeout = timeout;
+      xhr.onabort = handleError;
+      xhr.onerror = handleError;
+      xhr.ontimeout = handleError;
 
       if (method === METHOD.GET || !data) {
         xhr.send();
