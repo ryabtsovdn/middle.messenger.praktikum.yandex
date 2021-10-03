@@ -4,8 +4,9 @@ import {RegisterPage} from './components/pages/register-page';
 import {ProfilePage} from './components/pages/profile-page';
 import {ErrorPage} from './components/pages/error-page';
 import {Router} from './utils/router';
+import authController from './controllers/auth-controller';
 
-const router = new Router('#root');
+const router = new Router();
 
 router
   .use('/', LoginPage)
@@ -17,5 +18,13 @@ router
   .use('/settings/password', ProfilePage, {state: 'password'})
   .use('/settings/avatar', ProfilePage, {state: 'avatar'})
   .use('/500', ErrorPage, {code: 500, message: 'Мы уже фиксим'})
-  .use('/404', ErrorPage, {code: 404, message: 'Не туда попали'})
-  .start();
+  .use('/404', ErrorPage, {code: 404, message: 'Не туда попали'});
+
+(async () => {
+  try {
+    await authController.getUser();
+    router.start();
+  } catch (e) {
+    console.log(e);
+  }
+})();

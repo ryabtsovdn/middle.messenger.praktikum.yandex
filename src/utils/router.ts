@@ -6,16 +6,16 @@ export class Router {
   static __instance: Router;
 
   private _currentRoute!: Nullable<Route>;
-  private readonly _rootQuery!: string;
+  private readonly _rootQuery?: string;
   history!: History;
   routes!: Route[];
 
-  constructor(rootQuery: string) {
+  constructor(rootQuery?: string) {
     if (Router.__instance) {
       return Router.__instance;
     }
 
-    this._rootQuery = rootQuery;
+    this._rootQuery = rootQuery || '#root';
     this._currentRoute = null;
 
     this.history = window.history;
