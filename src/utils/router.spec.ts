@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {afterEach} from 'mocha';
 import {Router} from './router';
 import {Block} from './block';
-import sinon from 'sinon';
+import * as sinon from 'sinon';
 
 const pageTemplate = '<div>Title</div>';
 
