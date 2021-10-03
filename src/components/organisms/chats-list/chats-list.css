@@ -1,7 +1,7 @@
-.contacts-list {
+.chats-list {
   width: 100%;
 }
 
-.contacts-list__item {
+.chats-list__item {
   border-top: 1px solid #eaeaea;
 }

@@ -1,39 +1,4 @@
-/* eslint-disable camelcase */
 import BaseAPI from './base-api';
-
-interface ChatsOptions {
-  offset: number;
-  limit: number;
-  title: string;
-}
-
-interface MessageData {
-  user: UserData;
-  time: string;
-  content: string;
-}
-
-interface ChatData {
-  id: string;
-  title: string;
-  avatar: string;
-  unread_count: number;
-  last_message: MessageData;
-}
-
-interface ChatDeleted {
-  userId: number;
-  result: {
-    id: number;
-    title: string;
-    avatar: string;
-  };
-}
-
-interface ChatUsersData {
-  users: number[];
-  chatId: number;
-}
 
 export class ChatsAPI extends BaseAPI {
   constructor() {
@@ -53,7 +18,7 @@ export class ChatsAPI extends BaseAPI {
     return response.data;
   }
 
-  async chats(data: ChatsOptions): Promise<ChatData[]> {
+  async getAll(data: ChatsOptions): Promise<ChatData[]> {
     const response = await this.http.get<ChatData[]>('/', {data});
     return response.data;
   }

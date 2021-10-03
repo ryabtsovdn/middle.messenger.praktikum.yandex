@@ -5,7 +5,7 @@ export default `
                 {{> atoms-link href="/settings" text="Профиль >"}}
             </div>
             {{> organisms-search-form}}
-            {{> organisms-contacts-list contacts=.contacts active=.active setActive=.setActive}}
+            {{> organisms-chats-list chats=.chats active=.active setActive=.setActive}}
         </aside>
         <section class="chat-page__main {{#if activeChat}}chat-page__main--active{{/if}}">
             {{#if !activeChat}}

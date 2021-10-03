@@ -1,11 +1,11 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './contact.tmpl';
-import './contact.css';
+import template from './chat.tmpl';
+import './chat.css';
 
 const tmpl = new Templator(template);
 
-export class Contact extends Block {
+export class Chat extends Block {
   constructor(props: AnyObject) {
     super({
       ...props,
@@ -22,4 +22,4 @@ export class Contact extends Block {
   }
 }
 
-Templator.addPartial('molecules-contact', Contact);
+Templator.addPartial('molecules-chat', Chat);

@@ -5,6 +5,7 @@ import {ProfilePage} from './components/pages/profile-page';
 import {ErrorPage} from './components/pages/error-page';
 import {Router} from './utils/router';
 import authController from './controllers/auth-controller';
+import chatsController from './controllers/chats-controller';
 
 const router = new Router();
 
@@ -23,6 +24,7 @@ router
 (async () => {
   try {
     await authController.getUser();
+    await chatsController.getChats({offset: 0, title: ''});
     router.start();
   } catch (e) {
     console.log(e);

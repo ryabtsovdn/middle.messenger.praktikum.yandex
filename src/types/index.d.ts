@@ -44,6 +44,40 @@ type PasswordData = {
   newPassword: string;
 };
 
+interface ChatsOptions {
+  offset: number;
+  limit?: number;
+  title: string;
+}
+
+interface MessageData {
+  user: UserData;
+  time: string;
+  content: string;
+}
+
+interface ChatData {
+  id: string;
+  title: string;
+  avatar: string;
+  unread_count: number;
+  last_message: MessageData;
+}
+
+interface ChatDeleted {
+  userId: number;
+  result: {
+    id: number;
+    title: string;
+    avatar: string;
+  };
+}
+
+interface ChatUsersData {
+  users: number[];
+  chatId: number;
+}
+
 declare module '*.svg' {
   const content: any;
   export default content;
