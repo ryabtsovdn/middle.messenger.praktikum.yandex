@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 type UUID = string;
 
 type Nullable<T> = T | null;
@@ -9,6 +10,39 @@ type UnknownObject = Record<string, unknown>;
 type AnyObject = Record<string, any>;
 
 type FormElement = HTMLInputElement | HTMLTextAreaElement;
+
+interface SigninData {
+  login: string;
+  password: string;
+}
+
+interface SignupData {
+  email: string;
+  login: string;
+  first_name: string;
+  second_name: string;
+  phone: string;
+  password: string;
+}
+
+type ProfileData = Omit<SignupData, 'password'>;
+
+type UserData = ProfileData & {
+  id: number;
+  avatar: string;
+  display_name: string;
+};
+
+interface UserID {
+  id: number;
+}
+
+type AvatarData = UserData & {status: Nullable<string>};
+
+type PasswordData = {
+  oldPassword: string;
+  newPassword: string;
+};
 
 declare module '*.svg' {
   const content: any;
