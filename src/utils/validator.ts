@@ -16,14 +16,14 @@ export class Validator {
   static DEFAULT = {
     NAME: {
       match: /^(?!\s\W)[A-ZА-Я][A-Za-zА-Яа-я-]+$/,
-      desc: 'Должен содержать только буквы и знак -',
+      desc: 'Может содержать только буквы и знак -',
     },
     LOGIN: {
       required: true,
       min: 3,
       max: 20,
       match: /^(?=\D)(?!\s)[a-z\d_-]+$/i,
-      desc: 'Должен содержать только буквы, цифры и знаки -_',
+      desc: 'Может содержать только буквы, цифры и знаки -_',
     },
     EMAIL: {
       match:
@@ -99,8 +99,17 @@ export class Validator {
     element.classList.remove('validate--invalid');
   }
 
-  validateAll(targets: FormElement[]): boolean {
-    return targets.map(target => this.validate(target)).every(v => v);
+  validateForm(
+    form: HTMLFormElement,
+    selector = '.form-field__input'
+  ): boolean {
+    const formInputs = form.querySelectorAll(
+      selector
+    ) as NodeListOf<FormElement>;
+
+    return Array.from(formInputs)
+      .map(target => this.validate(target))
+      .every(v => v);
   }
 
   validate(target: FormElement): boolean {
