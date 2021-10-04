@@ -20,4 +20,8 @@ export class UserAPI extends BaseAPI {
     const response = await this.http.post<UserData>('/search', {data});
     return response.data;
   }
+
+  async changePassword(data: PasswordData): Promise<void> {
+    await this.http.put<void>('/password', {data});
+  }
 }

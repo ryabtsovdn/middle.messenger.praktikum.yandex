@@ -17,11 +17,12 @@ export class ProfileAPI extends BaseAPI {
   delete: undefined;
 
   async changeAvatar(data: FormData): Promise<AvatarData> {
-    const response = await this.http.put<AvatarData>('/avatar', {data});
+    const response = await this.http.put<AvatarData>('/avatar', {
+      data,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
-  }
-
-  async changePassword(data: PasswordData): Promise<void> {
-    await this.http.put<void>('/password', {data});
   }
 }

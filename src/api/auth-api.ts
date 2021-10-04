@@ -26,6 +26,6 @@ export class AuthAPI extends BaseAPI {
   }
 
   async logout(): Promise<void> {
-    await this.http.get('/logout');
+    await this.http.post('/logout');
   }
 }
