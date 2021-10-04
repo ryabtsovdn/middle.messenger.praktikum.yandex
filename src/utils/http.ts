@@ -131,7 +131,10 @@ export default class HTTPTransport {
       const xhr = new XMLHttpRequest();
       xhr.open(method, url);
 
-      xhr.setRequestHeader('Content-Type', 'application/json');
+      if (!headers['Content-Type']) {
+        xhr.setRequestHeader('Content-Type', 'application/json');
+      }
+
       for (const [header, value] of Object.entries(headers)) {
         xhr.setRequestHeader(header, value);
       }
@@ -159,7 +162,14 @@ export default class HTTPTransport {
       if (method === METHOD.GET || !data) {
         xhr.send();
       } else {
-        xhr.send(JSON.stringify(data));
+        let _data = data;
+        if (
+          !headers['Content-Type'] ||
+          headers['Content-Type'] === 'application/json'
+        ) {
+          _data = JSON.stringify(data);
+        }
+        xhr.send(_data);
       }
     });
   }
