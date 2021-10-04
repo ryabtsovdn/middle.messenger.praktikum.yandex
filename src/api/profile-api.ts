@@ -20,7 +20,7 @@ export class ProfileAPI extends BaseAPI {
     const response = await this.http.put<AvatarData>('/avatar', {
       data,
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': undefined,
       },
     });
     return response.data;

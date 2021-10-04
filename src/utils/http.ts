@@ -8,7 +8,7 @@ enum METHOD {
 
 type Options = {
   method: METHOD;
-  headers?: Record<string, string>;
+  headers?: Record<string, string | undefined>;
   data?: any;
   timeout?: number;
   responseType?: XMLHttpRequestResponseType;
@@ -131,12 +131,12 @@ export default class HTTPTransport {
       const xhr = new XMLHttpRequest();
       xhr.open(method, url);
 
-      if (!headers['Content-Type']) {
+      if (!('Content-Type' in headers)) {
         xhr.setRequestHeader('Content-Type', 'application/json');
       }
 
       for (const [header, value] of Object.entries(headers)) {
-        xhr.setRequestHeader(header, value);
+        value && xhr.setRequestHeader(header, value);
       }
 
       xhr.withCredentials = withCredentials;
@@ -164,7 +164,7 @@ export default class HTTPTransport {
       } else {
         let _data = data;
         if (
-          !headers['Content-Type'] ||
+          !('Content-Type' in headers) ||
           headers['Content-Type'] === 'application/json'
         ) {
           _data = JSON.stringify(data);
