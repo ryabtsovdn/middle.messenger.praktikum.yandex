@@ -1,7 +1,9 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
 import template from './profile-page.tmpl';
-import avatar from 'url:../../../../static/img/default-user.svg';
+import store from '../../../utils/store';
+import {Router} from '../../../utils/router';
+import authController from '../../../controllers/auth-controller';
 import '../../atoms/link';
 import '../../organisms/avatar';
 import '../../organisms/profile-form';
@@ -12,28 +14,28 @@ import './profile-page.css';
 
 const tmpl = new Templator(template);
 
-const user = {
-  email: 'email@yandex.ru',
-  login: 'ivanivanov',
-  firstName: 'Иван',
-  secondName: 'Иванов',
-  displayName: 'Иван',
-  phone: '+79999999999',
-  avatar,
-};
-
 export class ProfilePage extends Block {
-  componentDidMount(props: AnyObject): void {
-    this.setProps({
+  constructor(props: AnyObject = {}) {
+    super({
+      ...props,
       hideSubmit: props.state === 'profile',
-      user,
-      form: {
-        onSubmit: () => {
-          window.history.pushState(null, '', '/settings');
-          dispatchEvent(new PopStateEvent('popstate'));
-        },
+      user: store.state.user,
+      onLogout: (event: MouseEvent) => {
+        event.preventDefault();
+
+        authController.logout();
       },
     });
+  }
+
+  async componentDidMount(): Promise<void> {
+    store.subscribe(store.state.user, () => {
+      if (!store.state.user) {
+        new Router().go('/login');
+      }
+    });
+
+    await authController.getUser();
   }
   render(): string {
     return tmpl.compile(this.props);

@@ -41,6 +41,8 @@ class AuthController {
   async logout() {
     try {
       await this.api.logout();
+      store.state.user = null;
+      new Router().go('/login');
     } catch (e) {
       console.log(e);
     }
