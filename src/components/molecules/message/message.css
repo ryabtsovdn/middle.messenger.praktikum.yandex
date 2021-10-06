@@ -5,13 +5,13 @@
   border-radius: 10px;
 }
 
-.message--to {
+.message--outcoming {
   margin-left: auto;
   border-bottom-right-radius: 0;
   background-color: #e4edfd;
 }
 
-.message--from {
+.message--incoming {
   border-top-left-radius: 0;
   background-color: #f8f8f8;
 }

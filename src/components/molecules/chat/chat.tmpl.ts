@@ -5,7 +5,7 @@ export default `
         </div>
         <div class="chat__info">
             <p class="chat__name">{{chat.title}}</p>
-            <p class="chat__last">{{chat.last_message}}</p>
+            <p class="chat__last">{{lastMessage}}</p>
         </div>
     </div>
 `;
