@@ -25,6 +25,7 @@ export class Block {
     this.props = this._makeProxy(props);
     this.state = this._makeProxy(this.state);
 
+    this.forceUpdate = this.forceUpdate.bind(this);
     this._registerEvents();
 
     this._eventBus.emit(Block.EVENTS.INIT);
@@ -33,6 +34,10 @@ export class Block {
   // @ts-ignore
   protected initState(props: AnyObject): void {
     this.state = {};
+  }
+
+  protected forceUpdate(): void {
+    this.eventBus.emit(Block.EVENTS.FLOW_RENDER);
   }
 
   get eventBus(): EventBus {
