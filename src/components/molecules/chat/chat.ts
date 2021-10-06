@@ -9,9 +9,10 @@ export class Chat extends Block {
   constructor(props: AnyObject) {
     super({
       ...props,
+      lastMessage: props.chat.last_message?.content,
       events: {
         click(): void {
-          props.onClick(props.index);
+          props.onClick(props.chat.id);
         },
       },
     });

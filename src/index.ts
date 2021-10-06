@@ -24,7 +24,8 @@ router
 (async () => {
   try {
     await authController.getUser();
-    await chatsController.getChats({offset: 0, title: ''});
+    await chatsController.initChats();
+
     router.start();
   } catch (e) {
     console.log(e);
