@@ -17,22 +17,22 @@ class Store extends EventBus {
           return;
         }
 
-        if (typeof value === 'object' && value !== null) {
-          if (value.__path) {
-            return Reflect.get(target, prop, receiver);
-          }
+        if (typeof value === 'object' && value !== null && !value.__path) {
           value.__path = `${target.__path ? target.__path + '.' : ''}${prop}`;
+          Object.defineProperty(value, '__path', {enumerable: false});
           target[prop] = new Proxy(value, handler);
         }
 
         return Reflect.get(target, prop, receiver);
       },
       set: (target, prop, value, receiver) => {
+        target[prop as string] = value;
+
         if (this.listeners[target.__path]) {
           this.emit(target.__path);
         }
 
-        return Reflect.set(target, prop, value, receiver);
+        return true;
       },
     };
 
