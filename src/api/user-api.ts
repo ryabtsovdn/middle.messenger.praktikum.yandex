@@ -16,7 +16,7 @@ export class UserAPI extends BaseAPI {
 
   delete: undefined;
 
-  async search(data: SigninData): Promise<UserData> {
+  async search(data: {login: string}): Promise<UserData> {
     const response = await this.http.post<UserData>('/search', {data});
     return response.data;
   }

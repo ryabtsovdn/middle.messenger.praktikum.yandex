@@ -57,7 +57,7 @@ interface MessageData {
 }
 
 interface ChatData {
-  id: string;
+  id: number;
   title: string;
   avatar: string;
   unread_count: number;
