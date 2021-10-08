@@ -13,6 +13,7 @@ type Options = {
   timeout?: number;
   responseType?: XMLHttpRequestResponseType;
   withCredentials?: boolean;
+  signal?: AbortSignal;
 };
 
 type OptionsWithoutMethod = Omit<Options, 'method'>;
@@ -149,6 +150,20 @@ export default class HTTPTransport {
           resolve(createResponse<DataType>(xhr));
         }
       };
+
+      function abort() {
+        xhr.abort();
+      }
+
+      if (options.signal) {
+        options.signal.addEventListener('abort', abort);
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            options.signal?.removeEventListener('abort', abort);
+          }
+        };
+      }
 
       function handleError(): void {
         reject(createResponse<DataType>(xhr));
