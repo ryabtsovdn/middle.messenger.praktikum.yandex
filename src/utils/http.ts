@@ -1,3 +1,5 @@
+import {API_URL} from '../constants';
+
 enum METHOD {
   GET = 'GET',
   POST = 'POST',
@@ -48,7 +50,7 @@ function createResponse<T>(xhr: XMLHttpRequest): Response<T> {
 }
 
 export default class HTTPTransport {
-  static BASE_URL = 'https://ya-praktikum.tech/api/v2';
+  static BASE_URL = API_URL;
 
   private _apiURL: string;
 

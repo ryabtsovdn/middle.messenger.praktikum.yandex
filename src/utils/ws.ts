@@ -1,3 +1,5 @@
+import {WS_URL} from '../constants';
+
 interface Handlers {
   onMessage?: (data: any) => void;
   onOpen?: () => void;
@@ -13,7 +15,7 @@ interface SocketOptions {
 }
 
 export class WS {
-  static BASE_URL = 'wss://ya-praktikum.tech/ws/chats';
+  static BASE_URL = WS_URL;
 
   private _socket: WebSocket;
   handlers?: Handlers;
