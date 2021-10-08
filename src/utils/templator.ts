@@ -114,7 +114,11 @@ export class Templator {
     match: RegExpExecArray,
     ctx: UnknownObject
   ): string {
-    const prop = match[1].trim();
+    let prop = match[1].trim();
+    if (prop.startsWith('.')) {
+      prop = prop.slice(1);
+    }
+
     const data = get(ctx, prop, '');
 
     return tmpl.replace(new RegExp(match[0], 'gi'), data);
@@ -135,8 +139,8 @@ export class Templator {
     let listTmpl = '';
     for (let index = 0; index < list.length; index++) {
       listTmpl += inner
-        .replace('#this', `.${key}.${index}`)
-        .replace('#index', `${index}`);
+        .replace(/#this/g, `.${key}.${index}`)
+        .replace(/#index/g, `${index}`);
     }
 
     return tmpl.replace(eachRegex, listTmpl);
