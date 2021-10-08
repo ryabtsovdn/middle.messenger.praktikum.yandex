@@ -7,6 +7,7 @@ import chatsController from '../../../controllers/chats-controller';
 import '../../atoms/link';
 import '../../organisms/search-form';
 import '../../organisms/chat-form';
+import '../../organisms/chat-header';
 import '../../organisms/chats-list';
 import '../../organisms/messages-list';
 import './chat-page.css';

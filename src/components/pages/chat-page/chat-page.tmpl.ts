@@ -21,6 +21,9 @@ export default `
                 </ul>
             {{/if}}
             {{#if activeChat}}
+                <div class="chat-page__header">
+                    {{> organisms-chat-header chatId=.activeChat}}
+                </div>
                 <div class="chat-page__messages">
                     {{> organisms-messages-list chatId=.activeChat}}
                 </div>

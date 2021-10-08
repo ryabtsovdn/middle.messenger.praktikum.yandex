@@ -24,14 +24,9 @@
   overflow: hidden;
 }
 
-.chat-page__messages {
-  width: 100%;
-  margin-top: auto;
-  overflow: hidden;
-}
-
 .chat-page__main {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -42,4 +37,17 @@
 
 .chat-page__main--active {
   justify-content: stretch;
+}
+
+.chat-page__header {
+  width: 100%;
+  min-height: 56px;
+  border-bottom: 1px solid #eaeaea;
+  background-color: #fff;
+}
+
+.chat-page__messages {
+  width: 100%;
+  margin-top: auto;
+  overflow: hidden;
 }
