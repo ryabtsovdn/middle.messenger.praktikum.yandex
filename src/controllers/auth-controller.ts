@@ -42,6 +42,7 @@ class AuthController {
     try {
       await this.api.logout();
       store.state.user = null;
+      store.state.chats = null;
       new Router().go('/login');
     } catch (e) {
       console.log(e);
