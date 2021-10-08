@@ -15,7 +15,7 @@ export default `
                 <div class="profile-page__links">
                     {{> atoms-link href="/settings/edit" className="profile-page__link" text="Изменить данные"}}
                     {{> atoms-link href="/settings/password" className="profile-page__link" text="Изменить пароль"}}
-                    {{> atoms-link href="/" className="profile-page__link link_danger" text="Выйти" onClick=.onLogout}}
+                    {{> atoms-link className="profile-page__link link_danger" text="Выйти" onClick=.onLogout}}
                 </div>
             {{/if}}
             {{#if state avatar}}
