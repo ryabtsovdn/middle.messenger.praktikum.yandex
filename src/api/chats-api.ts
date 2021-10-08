@@ -35,4 +35,9 @@ export class ChatsAPI extends BaseAPI {
     const response = await this.http.post<{token: string}>(`/token/${chatId}`);
     return response.data.token;
   }
+
+  async getUsers(chatId: number): Promise<UserData[]> {
+    const response = await this.http.get<UserData[]>(`/${chatId}/users`);
+    return response.data;
+  }
 }
