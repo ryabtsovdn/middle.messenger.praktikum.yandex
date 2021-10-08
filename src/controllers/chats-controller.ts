@@ -68,6 +68,34 @@ class ChatsController {
     }
   }
 
+  async syncChatUsers(chatId: number): Promise<void> {
+    try {
+      const users = await this.api.getUsers(chatId);
+      store.state.chats[chatId].users = users;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async removeUser(chatId: number, userId: number): Promise<void> {
+    try {
+      await this.api.removeUser({users: [userId], chatId});
+      const chat = store.state.chats[chatId];
+      chat.users = chat.users.filter((user: UserData) => user.id !== userId);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async addUser(chatId: number, userId: number): Promise<void> {
+    try {
+      await this.api.addUser({users: [userId], chatId});
+      await this.syncChatUsers(chatId);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   sendMessage(chatId: number, message: {type: string; content: any}) {
     store.state.chats[chatId].ws.send(message);
   }

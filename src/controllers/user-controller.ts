@@ -37,6 +37,11 @@ class UserController {
       await this.changePassword(formData);
     }
   }
+
+  async search(login: string, signal?: AbortSignal): Promise<UserData[]> {
+    const users = await this.api.search({login}, signal);
+    return users;
+  }
 }
 
 export default new UserController();
