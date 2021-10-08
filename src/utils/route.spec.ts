@@ -44,19 +44,6 @@ describe('Route', function () {
       expect(spy.calledWith({text: 'Some text'})).true;
     });
 
-    it('Should show block on rerender', function () {
-      const namespace = {Page};
-      const divSpy = sinon.spy(namespace, 'Page');
-      const route = new Route('/', namespace.Page, defaultProps);
-      route.render();
-      route.leave();
-      const showSpy = sinon.spy(divSpy.lastCall.returnValue, 'show');
-
-      route.render();
-
-      expect(showSpy.calledOnce).true;
-    });
-
     it('Should throw error when the root query is invalid', function () {
       const route = new Route('/', Page, {rootQuery: '#id'});
 
@@ -70,7 +57,7 @@ describe('Route', function () {
       const divSpy = sinon.spy(namespace, 'Page');
       const route = new Route('/', namespace.Page, defaultProps);
       route.render();
-      const hideSpy = sinon.spy(divSpy.lastCall.returnValue, 'hide');
+      const hideSpy = sinon.spy(divSpy.lastCall.returnValue, 'destroy');
 
       route.leave();
 

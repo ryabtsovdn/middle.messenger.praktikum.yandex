@@ -67,7 +67,6 @@ describe('Router', function () {
       router.go('/path2');
 
       expect(window.history.length).to.equal(3);
-      expect(document.body.innerHTML).to.contain('Page1');
       expect(document.body.innerHTML).to.contain('Page2');
     });
 

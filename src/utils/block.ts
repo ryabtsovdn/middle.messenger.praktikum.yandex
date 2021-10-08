@@ -201,4 +201,9 @@ export class Block {
   hide(): void {
     this.element!.style.display = 'none';
   }
+
+  destroy(): void {
+    this._removeEvents();
+    this.element?.remove();
+  }
 }

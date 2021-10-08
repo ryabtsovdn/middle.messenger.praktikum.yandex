@@ -25,7 +25,8 @@ export class Route {
 
   leave(): void {
     if (this._block) {
-      this._block.hide();
+      this._block.destroy();
+      this._block = null;
     }
   }
 
@@ -38,9 +39,6 @@ export class Route {
       const {rootQuery, ...props} = this._props;
       this._block = new this._view(props);
       Route.render(rootQuery, this._block);
-      return;
     }
-
-    this._block.show();
   }
 }
