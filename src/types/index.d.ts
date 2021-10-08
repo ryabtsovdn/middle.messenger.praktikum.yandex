@@ -31,6 +31,7 @@ type UserData = ProfileData & {
   id: number;
   avatar: string;
   display_name: string;
+  role?: string;
 };
 
 interface UserID {
