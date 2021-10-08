@@ -6,6 +6,17 @@ import './input.css';
 const tmpl = new Templator(template);
 
 export class Input extends Block {
+  constructor(props: AnyObject) {
+    super({
+      ...props,
+      events: {
+        input: props.onInput,
+        change: props.onChange,
+        blur: props.onBlur,
+      },
+    });
+  }
+
   render(): string {
     return tmpl.compile(this.props);
   }
