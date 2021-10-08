@@ -2,6 +2,7 @@ import {ProfileAPI} from '../api/profile-api';
 import {Router} from '../utils/router';
 import {Validator} from '../utils/validator';
 import serializeForm from '../utils/serialize-form';
+import authController from './auth-controller';
 
 const validationRules = {
   email: Validator.DEFAULT.EMAIL,
@@ -26,6 +27,7 @@ class ProfileController {
   async changeAvatar(data: FormData) {
     try {
       await this.api.changeAvatar(data);
+      await authController.getUser();
       new Router().go('/settings');
     } catch (e) {
       console.log(e);
@@ -35,6 +37,7 @@ class ProfileController {
   async changeUser(data: ProfileData) {
     try {
       await this.api.update(data);
+      await authController.getUser();
       new Router().go('/settings');
     } catch (e) {
       console.log(e);
