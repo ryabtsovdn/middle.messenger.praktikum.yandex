@@ -138,10 +138,14 @@ export class Block {
     });
   }
 
+  _getEventListeners(): Record<string, EventListener> {
+    return {...this.props.events, ...this.state.events};
+  }
+
   _removeEvents(): void {
     if (!this.element) return;
 
-    const {events = {}} = this.props;
+    const events = this._getEventListeners();
 
     for (const [event, listener] of Object.entries(
       events as Record<string, EventListener>
@@ -155,7 +159,7 @@ export class Block {
       throw new Error('No element');
     }
 
-    const {events = {}} = this.props;
+    const events = this._getEventListeners();
 
     for (const [event, listener] of Object.entries(
       events as Record<string, EventListener>
