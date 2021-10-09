@@ -26,9 +26,8 @@ const tmpl = new Templator(`
 `);
 
 export class SignUpForm extends Block {
-  constructor(props: AnyObject = {}) {
-    super({
-      ...props,
+  initState(): void {
+    this.state = {
       events: {
         submit: async (event: SubmitEvent) => {
           event.preventDefault();
@@ -39,8 +38,9 @@ export class SignUpForm extends Block {
           validator.validate(event.target as FormElement);
         },
       },
-    });
+    };
   }
+
   render(): string {
     return tmpl.compile(this.props);
   }

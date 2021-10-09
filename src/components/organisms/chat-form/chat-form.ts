@@ -14,9 +14,8 @@ const tmpl = new Templator(`
 `);
 
 export class ChatForm extends Block {
-  constructor(props: AnyObject) {
-    super({
-      ...props,
+  initState(): void {
+    this.state = {
       events: {
         submit: (event: SubmitEvent) => {
           event.preventDefault();
@@ -30,7 +29,7 @@ export class ChatForm extends Block {
           (this.element as HTMLFormElement).reset();
         },
       },
-    });
+    };
   }
 
   render(): string {

@@ -15,20 +15,22 @@ const tmpl = new Templator(`
 `);
 
 export class Chat extends Block {
-  constructor(props: AnyObject) {
-    super({
-      ...props,
+  initState(props: AnyObject): void {
+    this.state = {
       lastMessage: props.chat.last_message?.content,
       events: {
         click(): void {
           props.onClick(props.chat.id);
         },
       },
-    });
+    };
   }
 
   render(): string {
-    return tmpl.compile(this.props);
+    return tmpl.compile({
+      ...this.props,
+      ...this.state,
+    });
   }
 }
 

@@ -7,15 +7,14 @@ const tmpl = new Templator(`
 `);
 
 export class Input extends Block {
-  constructor(props: AnyObject) {
-    super({
-      ...props,
+  initState(props: AnyObject): void {
+    this.state = {
       events: {
         input: props.onInput,
         change: props.onChange,
         blur: props.onBlur,
       },
-    });
+    };
   }
 
   render(): string {

@@ -20,9 +20,8 @@ const tmpl = new Templator(`
 `);
 
 export class PasswordForm extends Block {
-  constructor(props: AnyObject = {}) {
-    super({
-      ...props,
+  initState(): void {
+    this.state = {
       events: {
         submit: async (event: SubmitEvent) => {
           event.preventDefault();
@@ -33,8 +32,9 @@ export class PasswordForm extends Block {
           validator.validate(event.target as FormElement);
         },
       },
-    });
+    };
   }
+
   render(): string {
     return tmpl.compile(this.props);
   }

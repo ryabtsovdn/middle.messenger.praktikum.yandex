@@ -10,9 +10,8 @@ const tmpl = new Templator(`
 `);
 
 export class Link extends Block {
-  constructor(props: AnyObject = {}) {
-    super({
-      ...props,
+  initState(props: AnyObject): void {
+    this.state = {
       events: {
         click: (event: MouseEvent) => {
           event.preventDefault();
@@ -27,7 +26,7 @@ export class Link extends Block {
           }
         },
       },
-    });
+    };
   }
 
   render(): string {

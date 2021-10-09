@@ -13,9 +13,8 @@ const tmpl = new Templator(`
 `);
 
 export class ChatUser extends Block {
-  constructor(props: AnyObject = {}) {
-    super({
-      ...props,
+  initState(props: AnyObject): void {
+    this.state = {
       events: {
         click: async (event: MouseEvent) => {
           const el = event.target as HTMLElement;
@@ -26,7 +25,7 @@ export class ChatUser extends Block {
           }
         },
       },
-    });
+    };
   }
 
   render(): string {

@@ -25,9 +25,8 @@ const tmpl = new Templator(`
 `);
 
 export class ProfileForm extends Block {
-  constructor(props: AnyObject = {}) {
-    super({
-      ...props,
+  initState(): void {
+    this.state = {
       events: {
         submit: async (event: SubmitEvent) => {
           event.preventDefault();
@@ -40,7 +39,7 @@ export class ProfileForm extends Block {
           validator.validate(event.target as FormElement);
         },
       },
-    });
+    };
   }
 
   render(): string {

@@ -25,9 +25,11 @@ const tmpl = new Templator(`
 export class UserSearchForm extends Block {
   abortController: Nullable<AbortController> = null;
 
-  constructor(props: AnyObject) {
-    super({
-      ...props,
+  initState(props: AnyObject): void {
+    this.state = {
+      results: [],
+      value: '',
+      handleInput: this.handleInput.bind(this),
       events: {
         click: (event: MouseEvent) => {
           const el = event.target as HTMLElement;
@@ -36,14 +38,6 @@ export class UserSearchForm extends Block {
           }
         },
       },
-    });
-  }
-
-  initState(): void {
-    this.state = {
-      results: [],
-      value: '',
-      handleInput: this.handleInput.bind(this),
     };
   }
 
