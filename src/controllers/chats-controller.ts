@@ -58,10 +58,10 @@ class ChatsController {
     }
   }
 
-  async createChat(title: string): Promise<void> {
+  async createChat(data: {title: string}): Promise<void> {
     try {
-      await this.api.create({title});
-      const chats = await this.api.getAll({offset: 0, title});
+      await this.api.create(data);
+      const chats = await this.api.getAll({offset: 0, title: data.title});
       await this._storeChat(chats[0]);
     } catch (e) {
       console.log(e);

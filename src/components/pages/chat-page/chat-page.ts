@@ -3,19 +3,25 @@ import {Block} from '../../../utils/block';
 import {Router} from '../../../utils/router';
 import store from '../../../utils/store';
 import chatsController from '../../../controllers/chats-controller';
+import serializeForm from '../../../utils/serialize-form';
 import '../../atoms/link';
 import '../../organisms/search-form';
 import '../../organisms/chat-form';
 import '../../organisms/chat-header';
 import '../../organisms/chats-list';
 import '../../organisms/messages-list';
+import '../../organisms/create-chat-form';
+import '../../templates/modal-template';
 import './chat-page.css';
 
 const tmpl = new Templator(`
   <main class="chat-page">
     <aside class="chat-page__sidebar">
       <div class="chat-page__menu">
-        {{> atoms-link href="/settings" text="Создать чат" onClick=.addChat}}
+        {{> atoms-link text="Создать чат" onClick=.toggleCreateChat}}
+        {{#if isAddingChat}}
+          {{> templates-modal &content="organisms-create-chat-form" .content=.createChatForm onClose=.toggleCreateChat}}
+        {{/if}}
         {{> atoms-link href="/settings" text="Профиль >"}}
       </div>
       {{> organisms-search-form}}
@@ -49,19 +55,31 @@ const tmpl = new Templator(`
 export class ChatPage extends Block {
   initState(): void {
     this.state = {
+      isAddingChat: false,
       activeChat: null,
-      addChat: async (event: MouseEvent): Promise<void> => {
-        event.preventDefault();
-
-        await chatsController.createChat(`${Date.now()}`);
+      toggleCreateChat: (): void => {
+        this.setState({isAddingChat: !this.state.isAddingChat});
       },
-
       toggleActive: (id: number): void => {
         const activeChat = this.state.activeChat === id ? null : id;
 
         this.setState({
           activeChat,
         });
+      },
+      createChatForm: {
+        events: {
+          submit: async (event: SubmitEvent) => {
+            event.preventDefault();
+            const formData = serializeForm(event.target as HTMLFormElement) as {
+              title: string;
+            };
+            console.log(formData);
+
+            await chatsController.createChat(formData);
+            this.setState({isAddingChat: false});
+          },
+        },
       },
     };
   }

@@ -12,6 +12,25 @@ const tmpl = new Templator(`
 `);
 
 export class ModalTemplate extends Block {
+  initState(props: AnyObject): void {
+    this.state = {
+      events: {
+        click: (event: MouseEvent) => {
+          event.stopPropagation();
+
+          const el = event.target as HTMLElement;
+          if (!el.matches('.modal__overlay')) {
+            return;
+          }
+
+          if (props.onClose) {
+            props.onClose();
+          }
+        },
+      },
+    };
+  }
+
   render(): string {
     return tmpl.compile(this.props);
   }
