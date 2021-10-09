@@ -67,7 +67,9 @@ export class Validator {
     let err = '';
     switch (type) {
       case 'required':
-        if (!value) err = 'Поле обязательно для заполнения';
+        if (!value) {
+          err = 'Поле обязательно для заполнения';
+        }
         break;
       case 'min':
         if (data && value.length < data) {
@@ -80,7 +82,9 @@ export class Validator {
         }
         break;
       case 'match':
-        if (!(data as RegExp).test(value)) err = rule.desc || 'Неверный формат';
+        if (!(data as RegExp).test(value)) {
+          err = rule.desc || 'Неверный формат';
+        }
         break;
     }
     return err;
@@ -114,7 +118,9 @@ export class Validator {
 
   validate(target: FormElement): boolean {
     const element = target.closest('.validate');
-    if (!element) return true;
+    if (!element) {
+      return true;
+    }
 
     const value = target.value;
     const rule = this._rules[target.name];

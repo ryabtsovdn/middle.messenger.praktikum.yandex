@@ -143,7 +143,9 @@ export class Block {
   }
 
   _removeEvents(): void {
-    if (!this.element) return;
+    if (!this.element) {
+      return;
+    }
 
     const events = this._getEventListeners();
 

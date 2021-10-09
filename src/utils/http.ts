@@ -28,7 +28,9 @@ export type Response<T = unknown> = {
 
 const queryStringify = (obj: Record<string, any>) => {
   const keys = Object.keys(obj);
-  if (!keys.length) return;
+  if (!keys.length) {
+    return;
+  }
 
   return (
     '?' +
