@@ -5,7 +5,7 @@ import './user-search-form.css';
 
 const tmpl = new Templator(`
   <form class="user-search-form">
-    <label for="user-search-form" class="user-search-form__label">Add user:</label>
+    <label for="user-search-form" class="user-search-form__label">Добавить пользователя:</label>
     <div class="user-search-form__results">
       {{> atoms-input name="user-search-form" className="user-search-form__input" onInput=.handleInput value=.value}}
       {{#if showEmptyMessage}}
