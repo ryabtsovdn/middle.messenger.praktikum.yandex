@@ -16,8 +16,10 @@ interface SocketOptions {
 
 export class WS {
   static BASE_URL = WS_URL;
+  static PING_TIMEOUT = 10000;
 
   private _socket: WebSocket;
+  private _closed = false;
   handlers?: Handlers;
 
   constructor({userId, chatId, token, handlers}: SocketOptions) {
@@ -25,6 +27,7 @@ export class WS {
     this.handlers = handlers;
 
     this.send = this.send.bind(this);
+    this._ping = this._ping.bind(this);
     this._onOpen = this._onOpen.bind(this);
     this._onClose = this._onClose.bind(this);
     this._onMessage = this._onMessage.bind(this);
@@ -33,8 +36,13 @@ export class WS {
     this._init();
   }
 
-  send(message: {type: string; content: any}): void {
+  send(message: {type: string; content?: any}): void {
     this._socket.send(JSON.stringify(message));
+  }
+
+  close(): void {
+    this._socket.close();
+    this._closed = false;
   }
 
   _init(): void {
@@ -48,8 +56,14 @@ export class WS {
     this._socket.addEventListener('error', this._onError);
   }
 
+  _ping(): void {
+    this.send({type: 'ping'});
+  }
+
   _onOpen(): void {
     console.log('Connected');
+
+    this._ping();
 
     if (this.handlers?.onOpen) {
       this.handlers.onOpen();
@@ -71,6 +85,14 @@ export class WS {
   }
 
   _onMessage(event: MessageEvent): void {
+    if (event.data === '{"type":"pong"}') {
+      if (this._closed) {
+        return;
+      }
+
+      return void setTimeout(() => this._ping(), WS.PING_TIMEOUT);
+    }
+
     if (this.handlers?.onMessage) {
       this.handlers.onMessage(event.data);
     }
