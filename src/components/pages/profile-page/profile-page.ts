@@ -4,6 +4,7 @@ import store from '../../../utils/store';
 import {Router} from '../../../utils/router';
 import authController from '../../../controllers/auth-controller';
 import '../../atoms/link';
+import '../../atoms/button';
 import '../../organisms/avatar';
 import '../../organisms/profile-form';
 import '../../organisms/password-form';
@@ -14,7 +15,7 @@ import './profile-page.css';
 const tmpl = new Templator(`
   <main class="profile-page">
     <aside class="profile-page__aside">
-      {{> atoms-link href="/messenger" className="profile-page__back" text=""}}
+      {{> atoms-button className="button--arrow profile-page__back" text="" onClick=.onBack}}
     </aside>
     <article class="profile-page__content">
       {{> organisms-avatar className="profile-page__avatar" user=.user}}
@@ -48,6 +49,9 @@ export class ProfilePage extends Block {
         event.preventDefault();
 
         authController.logout();
+      },
+      onBack: () => {
+        new Router().go('/messenger');
       },
     });
   }

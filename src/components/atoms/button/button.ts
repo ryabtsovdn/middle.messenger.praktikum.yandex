@@ -9,6 +9,14 @@ const tmpl = new Templator(`
 `);
 
 export class Button extends Block {
+  initState(props: AnyObject): void {
+    this.state = {
+      events: {
+        click: props.onClick,
+      },
+    };
+  }
+
   render(): string {
     return tmpl.compile(this.props);
   }

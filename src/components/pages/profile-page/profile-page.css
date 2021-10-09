@@ -4,9 +4,16 @@
 }
 
 .profile-page__aside {
+  display: flex;
   width: 64px;
   border-right: 1px solid #eaeaea;
   background-color: #fbfbfb;
+}
+
+.profile-page__back {
+  margin: auto;
+  transform: rotate(180deg);
+  cursor: pointer;
 }
 
 .profile-page__content {
