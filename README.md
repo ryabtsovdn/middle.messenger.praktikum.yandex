@@ -13,4 +13,4 @@
 ## Спринт
 
 - Ссылка на макет в Figma - https://www.figma.com/file/zuKuitq548eAcvJuS4OLzt/Chat
-- Ссылка на текущий pull request - https://github.com/ryabtsovdn/middle.messenger.praktikum.yandex/pull/2
+- Ссылка на текущий pull request - https://github.com/ryabtsovdn/middle.messenger.praktikum.yandex/pull/3
