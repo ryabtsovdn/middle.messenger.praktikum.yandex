@@ -33,15 +33,15 @@ const tmpl = new Templator(`
         </div>
       {{/if}}
       {{#if state avatar}}
-        {{> templates-modal className="profile-page__avatar-modal" &content="organisms-avatar-form"}}
+        {{> templates-modal className="profile-page__avatar-modal" &content="organisms-avatar-form" onClose=.onCloseModal}}
       {{/if}}
     </article>
   </main>
 `);
 
 export class ProfilePage extends Block {
-  constructor(props: AnyObject = {}) {
-    super({
+  initState(props: AnyObject): void {
+    this.state = {
       ...props,
       hideSubmit: props.state === 'profile',
       user: store.state.user,
@@ -53,7 +53,10 @@ export class ProfilePage extends Block {
       onBack: () => {
         new Router().go('/messenger');
       },
-    });
+      onCloseModal: () => {
+        new Router().go('/settings');
+      },
+    };
   }
 
   async componentDidMount(): Promise<void> {
@@ -66,6 +69,9 @@ export class ProfilePage extends Block {
     await authController.getUser();
   }
   render(): string {
-    return tmpl.compile(this.props);
+    return tmpl.compile({
+      ...this.props,
+      ...this.state,
+    });
   }
 }
