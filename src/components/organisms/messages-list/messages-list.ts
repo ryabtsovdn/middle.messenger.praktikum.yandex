@@ -1,11 +1,16 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './messages-list.tmpl';
 import store from '../../../utils/store';
 import '../../molecules/message';
 import './messages-list.css';
 
-const tmpl = new Templator(template);
+const tmpl = new Templator(`
+  <ul class="messages-list">
+    {{#each messages}}
+      <li class="messages-list__item">{{> molecules-message message=#this index=#index}}</li>
+    {{/each}}
+  </ul>
+`);
 
 export class MessagesList extends Block {
   constructor(props: AnyObject = {}) {

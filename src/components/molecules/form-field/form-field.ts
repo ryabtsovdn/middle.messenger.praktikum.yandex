@@ -1,10 +1,17 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './form-field.tmpl';
 import '../../atoms/input';
 import './form-field.css';
 
-const tmpl = new Templator(template);
+const tmpl = new Templator(`
+  <div class="form-field {{className}} {{#if disabled}}form-field_disabled{{/if}}">
+    {{> atoms-input className="form-field__input" name=.name type=.type value=.value}}
+    <label class="form-field__label" for={{name}}>
+      {{label}}
+    </label>
+    <label class="validate__error" for={{name}}></label>
+  </div>
+`);
 
 export class FormField extends Block {
   render(): string {

@@ -1,11 +1,18 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './chats-list.tmpl';
 import store from '../../../utils/store';
 import '../../molecules/chat';
 import './chats-list.css';
 
-const tmpl = new Templator(template);
+const tmpl = new Templator(`
+  <ul class="chats-list">
+    {{#each chats}}
+      <li class="chats-list__item">
+        {{> molecules-chat chat=#this index=#index active=.active onClick=.toggleActive}}
+      </li>
+    {{/each}}
+  </ul>
+`);
 
 export class ChatsList extends Block {
   constructor(props: AnyObject = {}) {

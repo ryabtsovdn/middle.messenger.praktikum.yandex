@@ -1,9 +1,12 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './auth-template.tmpl';
 import './auth-template.css';
 
-const tmpl = new Templator(template);
+const tmpl = new Templator(`
+  <div class="auth-page {{className}}">
+    {{content}}
+  </div>
+`);
 
 export class AuthTemplate extends Block {
   render(): string {

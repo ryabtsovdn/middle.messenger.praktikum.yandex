@@ -1,9 +1,15 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './modal-template.tmpl';
 import './modal-template.css';
 
-const tmpl = new Templator(template);
+const tmpl = new Templator(`
+  <div class="modal {{className}}">
+    <div class="modal__overlay"></div>
+    <div class="modal__content">
+      {{content}}
+    </div>
+  </div>
+`);
 
 export class ModalTemplate extends Block {
   render(): string {

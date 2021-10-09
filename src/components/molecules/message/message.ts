@@ -1,10 +1,14 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './message.tmpl';
 import store from '../../../utils/store';
 import './message.css';
 
-const tmpl = new Templator(template);
+const tmpl = new Templator(`
+  <div class="message message--{{direction}}">
+    <div class="message__text">{{message.content}}</div>
+    <span class="message__date">{{message.time}}</span>
+  </div>
+`);
 
 export class Message extends Block {
   render(): string {

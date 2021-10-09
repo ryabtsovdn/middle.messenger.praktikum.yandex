@@ -1,10 +1,13 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './link.tmpl';
 import {Router} from '../../../utils/router';
 import './link.css';
 
-const tmpl = new Templator(template);
+const tmpl = new Templator(`
+  <a href="{{href}}" class="link {{className}}">
+    {{text}}
+  </a>
+`);
 
 export class Link extends Block {
   constructor(props: AnyObject = {}) {

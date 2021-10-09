@@ -1,6 +1,5 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './signin-form.tmpl';
 import loginController, {
   validator,
 } from '../../../controllers/login-controller';
@@ -9,7 +8,17 @@ import '../../atoms/button';
 import '../../atoms/link';
 import './signin-form.css';
 
-const tmpl = new Templator(template);
+const tmpl = new Templator(`
+  <form class="auth-form">
+    <h2 class="auth-form__title">Вход</h2>
+    {{> molecules-form-field className="validate" type="text" name="login" label="Логин"}}
+    {{> molecules-form-field className="validate" type="password" name="password" label="Пароль"}}
+    <div class="auth-form__buttons signin-form__buttons">
+      {{> atoms-button className="auth-form__button" text="Войти"}}
+      {{> atoms-link href="/sign-up" text="Нет аккаунта?" className="auth-form__link"}}
+    </div>
+  </form>
+`);
 
 export class SignInForm extends Block {
   constructor(props: AnyObject = {}) {

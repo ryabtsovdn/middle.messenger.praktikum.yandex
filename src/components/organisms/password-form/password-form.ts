@@ -1,13 +1,23 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './password-form.tmpl';
 import userController, {validator} from '../../../controllers/user-controller';
 import '../../molecules/form-field';
 import '../../atoms/button';
 import '../../atoms/link';
 import './password-form.css';
 
-const tmpl = new Templator(template);
+const fieldCls = `form-field_inline validate`;
+
+const tmpl = new Templator(`
+  <form class="profile-form">
+    {{> molecules-form-field type="password" className="${fieldCls}" label="Старый пароль" name="oldPassword"}}
+    {{> molecules-form-field type="password" className="${fieldCls}" label="Новый пароль" name="newPassword"}}
+    {{> molecules-form-field type="password" className="${fieldCls}" label="Подтвердите новый пароль" name="newPasswordConfirm"}}
+    {{#if !form.hideSubmit}}
+      {{> atoms-button className="profile-form__button" text="Сохранить"}}
+    {{/if}}
+  </form>
+`);
 
 export class PasswordForm extends Block {
   constructor(props: AnyObject = {}) {
