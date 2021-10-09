@@ -179,7 +179,7 @@ export class Templator {
     return tmpl;
   }
 
-  compile(ctx: UnknownObject): string {
+  compile(ctx: UnknownObject = {}): string {
     const compiled = this._compileTemplate(ctx);
     return compiled;
   }
