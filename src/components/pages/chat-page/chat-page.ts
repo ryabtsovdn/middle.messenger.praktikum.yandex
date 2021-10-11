@@ -1,62 +1,99 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './chat-page.tmpl';
-import avatar from 'url:../../../../static/img/default-user.svg';
+import {Router} from '../../../utils/router';
+import store from '../../../utils/store';
+import chatsController from '../../../controllers/chats-controller';
+import serializeForm from '../../../utils/serialize-form';
 import '../../atoms/link';
 import '../../organisms/search-form';
 import '../../organisms/chat-form';
-import '../../organisms/contacts-list';
+import '../../organisms/chat-header';
+import '../../organisms/chats-list';
 import '../../organisms/messages-list';
+import '../../organisms/create-chat-form';
+import '../../templates/modal-template';
 import './chat-page.css';
 
-const tmpl = new Templator(template);
-
-const contacts = [
-  {
-    name: 'Андрей',
-    avatar,
-    messages: [
-      {text: 'Hi', direction: 'to', ts: Date.now()},
-      {text: 'Hello', direction: 'from', ts: Date.now() - 100000},
-      {text: 'Whazzup!', direction: 'from', ts: Date.now() - 200000},
-    ],
-  },
-  {
-    name: 'Илья',
-    avatar,
-    messages: [
-      {text: 'Good morning', direction: 'to', ts: Date.now()},
-      {text: 'Hi', direction: 'from', ts: Date.now() - 100000},
-      {text: 'How is it going?', direction: 'from', ts: Date.now() - 200000},
-    ],
-  },
-];
+const tmpl = new Templator(`
+  <main class="chat-page">
+    <aside class="chat-page__sidebar">
+      <div class="chat-page__menu">
+        {{> atoms-link text="Создать чат" onClick=.toggleCreateChat}}
+        {{#if isAddingChat}}
+          {{> templates-modal &content="organisms-create-chat-form" .content=.createChatForm onClose=.toggleCreateChat}}
+        {{/if}}
+        {{> atoms-link href="/settings" text="Профиль >"}}
+      </div>
+      {{> organisms-search-form}}
+      <div class="chat-page__chats">
+        {{> organisms-chats-list active=.activeChat toggleActive=.toggleActive}}
+      </div>
+    </aside>
+    <section class="chat-page__main {{#if activeChat}}chat-page__main--active{{/if}}">
+      {{#if !activeChat}}
+        <p class="chat-page__choose">Выберите чат чтобы отправить сообщение</p>
+        <br>
+        <h2>Ссылки на страницы ошибок:</h2>
+        <ul>
+          <li>{{> atoms-link href="/404" text="Страница не найдена"}}</li>
+          <li>{{> atoms-link href="/500" text="Внутренняя ошибка"}}</li>
+        </ul>
+      {{/if}}
+      {{#if activeChat}}
+        <div class="chat-page__header">
+          {{> organisms-chat-header chatId=.activeChat}}
+        </div>
+        <div class="chat-page__messages">
+          {{> organisms-messages-list chatId=.activeChat}}
+        </div>
+        {{> organisms-chat-form chatId=.activeChat}}
+      {{/if}}
+    </section>
+  </main>
+`);
 
 export class ChatPage extends Block {
-  constructor(props: UnknownObject = {}) {
-    super(
-      Object.assign(props, {
-        activeChat: null,
-        contacts,
-        messages: null,
-      })
-    );
-    const setActive = (index: number): void => {
-      const activeChat = this.props.activeChat === index ? null : index;
-      this.setProps({
-        activeChat,
-        messages: activeChat && contacts[activeChat].messages,
-      });
+  initState(): void {
+    this.state = {
+      isAddingChat: false,
+      activeChat: null,
+      toggleCreateChat: (): void => {
+        this.setState({isAddingChat: !this.state.isAddingChat});
+      },
+      toggleActive: (id: number): void => {
+        const activeChat = this.state.activeChat === id ? null : id;
+
+        this.setState({
+          activeChat,
+        });
+      },
+      createChatForm: {
+        events: {
+          submit: async (event: SubmitEvent) => {
+            event.preventDefault();
+            const formData = serializeForm(event.target as HTMLFormElement) as {
+              title: string;
+            };
+            console.log(formData);
+
+            await chatsController.createChat(formData);
+            this.setState({isAddingChat: false});
+          },
+        },
+      },
     };
-    const send = (text: string): void => {
-      const active = this.props.activeChat as number;
-      contacts[active].messages.push({text, direction: 'to', ts: Date.now()});
-    };
-    this.setProps({setActive, send});
+  }
+
+  async componentDidMount(): Promise<void> {
+    if (!store.state.user) {
+      new Router().go('/login');
+    }
   }
 
   render(): string {
-    const compiled = tmpl.compile(this.props);
-    return compiled;
+    return tmpl.compile({
+      ...this.props,
+      ...this.state,
+    });
   }
 }

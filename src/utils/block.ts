@@ -12,18 +12,32 @@ export class Block {
 
   protected _id: UUID;
   protected _element: Nullable<HTMLElement> = null;
-  protected readonly props: UnknownObject;
+  protected state: AnyObject = {};
+  protected readonly props: AnyObject;
   protected readonly _eventBus: EventBus;
 
-  constructor(props: UnknownObject = {}) {
+  constructor(props: AnyObject = {}) {
     this._eventBus = new EventBus();
 
-    this.props = this._makePropsProxy(props);
-    this._id = `id-${nanoid()}`;
+    this.initState(props);
 
+    this._id = `id-${nanoid()}`;
+    this.props = this._makeProxy(props);
+    this.state = this._makeProxy(this.state);
+
+    this.forceUpdate = this.forceUpdate.bind(this);
     this._registerEvents();
 
     this._eventBus.emit(Block.EVENTS.INIT);
+  }
+
+  // @ts-ignore
+  protected initState(props: AnyObject): void {
+    this.state = {};
+  }
+
+  protected forceUpdate(): void {
+    this.eventBus.emit(Block.EVENTS.FLOW_RENDER);
   }
 
   get eventBus(): EventBus {
@@ -44,17 +58,17 @@ export class Block {
     this.eventBus.emit(Block.EVENTS.FLOW_CDM, this.props);
   }
 
-  _componentDidMount(props: UnknownObject): void {
+  _componentDidMount(props: AnyObject): void {
     this.eventBus.emit(Block.EVENTS.FLOW_RENDER);
     this.componentDidMount(props);
   }
 
   // @ts-ignore
-  componentDidMount(props: UnknownObject): void {
+  componentDidMount(props: AnyObject): void {
     // Could be defined by user
   }
 
-  _componentDidUpdate(oldProps: UnknownObject, newProps: UnknownObject): void {
+  _componentDidUpdate(oldProps: AnyObject, newProps: AnyObject): void {
     const shouldUpdate = this.componentDidUpdate(oldProps, newProps);
     if (shouldUpdate) {
       this.eventBus.emit(Block.EVENTS.FLOW_RENDER);
@@ -63,20 +77,28 @@ export class Block {
 
   componentDidUpdate(
     // @ts-ignore
-    oldProps: UnknownObject,
+    oldProps: AnyObject,
     // @ts-ignore
-    newProps: UnknownObject
+    newProps: AnyObject
   ): boolean {
     // Could be defined by user
     return true;
   }
 
-  setProps(nextProps: UnknownObject): void {
+  setProps(nextProps: AnyObject): void {
     if (!nextProps) {
       return;
     }
 
     Object.assign(this.props, nextProps);
+  }
+
+  setState(nextState: AnyObject): void {
+    if (!nextState) {
+      return;
+    }
+
+    Object.assign(this.state, nextState);
   }
 
   get element(): Nullable<HTMLElement> {
@@ -116,10 +138,16 @@ export class Block {
     });
   }
 
-  _removeEvents(): void {
-    if (!this.element) return;
+  _getEventListeners(): Record<string, EventListener> {
+    return {...this.props.events, ...this.state.events};
+  }
 
-    const {events = {}} = this.props;
+  _removeEvents(): void {
+    if (!this.element) {
+      return;
+    }
+
+    const events = this._getEventListeners();
 
     for (const [event, listener] of Object.entries(
       events as Record<string, EventListener>
@@ -133,7 +161,7 @@ export class Block {
       throw new Error('No element');
     }
 
-    const {events = {}} = this.props;
+    const events = this._getEventListeners();
 
     for (const [event, listener] of Object.entries(
       events as Record<string, EventListener>
@@ -147,13 +175,13 @@ export class Block {
     return '<div></div>';
   }
 
-  _makePropsProxy(props: UnknownObject): UnknownObject {
+  _makeProxy(props: AnyObject): AnyObject {
     const handler = {
-      get: (target: UnknownObject, prop: string) => {
+      get: (target: AnyObject, prop: string) => {
         const value = target[prop];
         return typeof value === 'function' ? value.bind(target) : value;
       },
-      set: (target: UnknownObject, prop: string, value: any) => {
+      set: (target: AnyObject, prop: string, value: any) => {
         if (target[prop] === value) {
           return true;
         }
@@ -178,5 +206,10 @@ export class Block {
 
   hide(): void {
     this.element!.style.display = 'none';
+  }
+
+  destroy(): void {
+    this._removeEvents();
+    this.element?.remove();
   }
 }

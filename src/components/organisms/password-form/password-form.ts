@@ -1,51 +1,40 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import {Validator} from '../../../utils/validator';
-import serializeForm from '../../../utils/serialize-form';
-import template from './password-form.tmpl';
+import userController, {validator} from '../../../controllers/user-controller';
 import '../../molecules/form-field';
 import '../../atoms/button';
 import '../../atoms/link';
 import './password-form.css';
 
-const tmpl = new Templator(template);
+const fieldCls = `form-field_inline validate`;
 
-const validationRules = {
-  oldPassword: Validator.DEFAULT.PASSWORD,
-  newPassword: Validator.DEFAULT.PASSWORD,
-  newPasswordConfirm: Validator.DEFAULT.PASSWORD,
-};
-
-const validator = new Validator({
-  rules: validationRules,
-});
+const tmpl = new Templator(`
+  <form class="profile-form">
+    {{> molecules-form-field type="password" className="${fieldCls}" label="Старый пароль" name="oldPassword"}}
+    {{> molecules-form-field type="password" className="${fieldCls}" label="Новый пароль" name="newPassword"}}
+    {{> molecules-form-field type="password" className="${fieldCls}" label="Подтвердите новый пароль" name="newPasswordConfirm"}}
+    {{#if !form.hideSubmit}}
+      {{> atoms-button className="profile-form__button" text="Сохранить"}}
+    {{/if}}
+  </form>
+`);
 
 export class PasswordForm extends Block {
-  constructor(props: {onSubmit?: () => void} = {}) {
-    const {onSubmit} = props;
-    super({
-      ...props,
+  initState(): void {
+    this.state = {
       events: {
-        submit: (event: SubmitEvent) => {
+        submit: async (event: SubmitEvent) => {
           event.preventDefault();
-          console.log(serializeForm(event.target as HTMLFormElement));
 
-          const formInputs = (this.element as HTMLElement).querySelectorAll(
-            '.form-field__input'
-          ) as NodeListOf<FormElement>;
-
-          const isValid = validator.validateAll([...formInputs]);
-
-          if (isValid && onSubmit) {
-            onSubmit();
-          }
+          await userController.updatePassword(this.element as HTMLFormElement);
         },
         focusout: (event: FocusEvent) => {
           validator.validate(event.target as FormElement);
         },
       },
-    });
+    };
   }
+
   render(): string {
     return tmpl.compile(this.props);
   }

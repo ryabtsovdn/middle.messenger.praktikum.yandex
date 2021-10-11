@@ -1,0 +1,16 @@
+.chat-header {
+  display: flex;
+  align-items: center;
+}
+
+.chat-header__users {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+}
+
+.chat-header__user {
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}

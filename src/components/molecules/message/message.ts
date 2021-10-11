@@ -1,27 +1,22 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './message.tmpl';
+import store from '../../../utils/store';
 import './message.css';
 
-const tmpl = new Templator(template);
-
-interface IMessage {
-  text: string;
-  direction: 'from' | 'to';
-  ts: number;
-}
+const tmpl = new Templator(`
+  <div class="message message--{{direction}}">
+    <div class="message__text">{{message.content}}</div>
+    <span class="message__date">{{message.time}}</span>
+  </div>
+`);
 
 export class Message extends Block {
-  constructor(props: UnknownObject) {
-    const dateObj = new Date((props.message as IMessage).ts);
-    const date =
-      `0${dateObj.getHours()}`.slice(-2) +
-      ':' +
-      `0${dateObj.getMinutes()}`.slice(-2);
-    super({...props, date});
-  }
   render(): string {
-    return tmpl.compile(this.props);
+    const direction =
+      this.props.message.user_id === store.state.user.id
+        ? 'outcoming'
+        : 'incoming';
+    return tmpl.compile({...this.props, direction});
   }
 }
 

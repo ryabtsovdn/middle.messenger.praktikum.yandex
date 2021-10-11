@@ -1,17 +1,22 @@
 {
-    "include": ["src/**/*"],
-    "exclude": ["dist"],
-    "compilerOptions": {
-        "strict": true,
-        "outDir": "dist",
-        "baseUrl": "./src",
-        "target": "ES2018",
-        "module": "CommonJS",
-        "esModuleInterop": true,
-        "sourceMap": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true
-    }
+  "ts-node": {
+    "files": true
+  },
+  "files": ["src/types/index.d.ts"],
+  "include": ["src/**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+      "strict": true,
+      "outDir": "dist",
+      "baseUrl": "./src",
+      "target": "ES2018",
+      "lib": ["DOM", "DOM.Iterable"],
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "sourceMap": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true
+  }
 }

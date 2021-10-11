@@ -1,5 +1,5 @@
 type Event = string;
-type Listener = (...args: any[]) => void;
+export type Listener = (...args: any[]) => void;
 
 export class EventBus {
   listeners: Record<string, Listener[]>;

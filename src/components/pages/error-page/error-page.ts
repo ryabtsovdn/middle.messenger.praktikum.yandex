@@ -1,10 +1,15 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
-import template from './error-page.tmpl';
 import '../../atoms/link';
 import './error-page.css';
 
-const tmpl = new Templator(template);
+const tmpl = new Templator(`
+  <main class="error-page">
+    <h1 class="error-page__code">{{code}}</h1>
+    <h2 class="error-page__message">{{message}}</h2>
+    {{> atoms-link href="/messenger" className="error-page__back" text="Назад к чатам"}}
+  </main>
+`);
 
 export class ErrorPage extends Block {
   override render(): string {

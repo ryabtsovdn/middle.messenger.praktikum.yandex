@@ -2,23 +2,31 @@
   display: flex;
   justify-content: stretch;
   height: 100vh;
+  overflow: hidden;
 }
 
 .chat-page__sidebar {
+  display: flex;
+  flex-direction: column;
   width: 310px;
   padding: 0 10px;
   background-color: #fbfbfb;
 }
 
-.chat-page__profile {
+.chat-page__menu {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  height: 56px;
+  justify-content: space-between;
+  min-height: 56px;
+}
+
+.chat-page__chats {
+  overflow: hidden;
 }
 
 .chat-page__main {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -28,5 +36,18 @@
 }
 
 .chat-page__main--active {
-  justify-content: flex-end;
+  justify-content: stretch;
+}
+
+.chat-page__header {
+  width: 100%;
+  min-height: 56px;
+  border-bottom: 1px solid #eaeaea;
+  background-color: #fff;
+}
+
+.chat-page__messages {
+  width: 100%;
+  margin-top: auto;
+  overflow: hidden;
 }

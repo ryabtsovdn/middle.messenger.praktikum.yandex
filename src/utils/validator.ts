@@ -16,14 +16,14 @@ export class Validator {
   static DEFAULT = {
     NAME: {
       match: /^(?!\s\W)[A-ZА-Я][A-Za-zА-Яа-я-]+$/,
-      desc: 'Должен содержать только буквы и знак -',
+      desc: 'Может содержать только буквы и знак -',
     },
     LOGIN: {
       required: true,
       min: 3,
       max: 20,
       match: /^(?=\D)(?!\s)[a-z\d_-]+$/i,
-      desc: 'Должен содержать только буквы, цифры и знаки -_',
+      desc: 'Может содержать только буквы, цифры и знаки -_',
     },
     EMAIL: {
       match:
@@ -67,7 +67,9 @@ export class Validator {
     let err = '';
     switch (type) {
       case 'required':
-        if (!value) err = 'Поле обязательно для заполнения';
+        if (!value) {
+          err = 'Поле обязательно для заполнения';
+        }
         break;
       case 'min':
         if (data && value.length < data) {
@@ -80,7 +82,9 @@ export class Validator {
         }
         break;
       case 'match':
-        if (!(data as RegExp).test(value)) err = rule.desc || 'Неверный формат';
+        if (!(data as RegExp).test(value)) {
+          err = rule.desc || 'Неверный формат';
+        }
         break;
     }
     return err;
@@ -99,13 +103,24 @@ export class Validator {
     element.classList.remove('validate--invalid');
   }
 
-  validateAll(targets: FormElement[]): boolean {
-    return targets.map(target => this.validate(target)).every(v => v);
+  validateForm(
+    form: HTMLFormElement,
+    selector = '.form-field__input'
+  ): boolean {
+    const formInputs = form.querySelectorAll(
+      selector
+    ) as NodeListOf<FormElement>;
+
+    return Array.from(formInputs)
+      .map(target => this.validate(target))
+      .every(v => v);
   }
 
   validate(target: FormElement): boolean {
     const element = target.closest('.validate');
-    if (!element) return true;
+    if (!element) {
+      return true;
+    }
 
     const value = target.value;
     const rule = this._rules[target.name];
