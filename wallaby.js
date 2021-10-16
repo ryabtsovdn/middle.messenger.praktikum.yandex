@@ -1,7 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
 const compilerOptions = require('./tsconfig.json').compilerOptions;
 
-// eslint-disable-next-line no-undef
 module.exports = function (wallaby) {
   return {
     trace: true,
@@ -19,7 +17,6 @@ module.exports = function (wallaby) {
       '**/*.ts': wallaby.compilers.typeScript(compilerOptions),
     },
     setup: function () {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
       require('global-jsdom')('', {
         url: 'https://domain.com/',
       });

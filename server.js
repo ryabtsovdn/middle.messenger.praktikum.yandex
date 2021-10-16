@@ -10,9 +10,9 @@ const app = express();
 app.use(express.static(STATIC_DIR));
 
 app.get('*', (req, res) => {
-    res.sendFile(INDEX);
+  res.sendFile(INDEX);
 });
 
 app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
+  console.log(`Listening on port ${PORT}`);
 });
