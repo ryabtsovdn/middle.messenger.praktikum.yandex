@@ -25,7 +25,7 @@ class Store extends EventBus {
 
         return Reflect.get(target, prop, receiver);
       },
-      set: (target, prop, value, receiver) => {
+      set: (target, prop, value) => {
         target[prop as string] = value;
 
         if (this.listeners[target.__path]) {
