@@ -6,6 +6,7 @@ import {ErrorPage} from './components/pages/error-page';
 import {Router} from './utils/router';
 import authController from './controllers/auth-controller';
 import chatsController from './controllers/chats-controller';
+import './reset.css';
 
 const router = new Router();
 
