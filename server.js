@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const STATIC_DIR = path.resolve(__dirname, 'dist');
 const INDEX = path.resolve(STATIC_DIR, 'index.html');
 
