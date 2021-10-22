@@ -14,10 +14,6 @@
 .chat__avatar {
   margin-right: 10px;
   overflow: hidden;
-
-  img {
-    border-radius: 50%;
-  }
 }
 
 .chat__info {
