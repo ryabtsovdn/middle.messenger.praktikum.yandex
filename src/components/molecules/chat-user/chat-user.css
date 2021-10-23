@@ -4,9 +4,17 @@
   align-items: center;
   height: 48px;
   padding: 10px 30px 10px 10px;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
+  font-weight: bold;
   font-size: 14px;
+}
+
+.chat-user__avatar {
+  width: 34px;
+  height: 34px;
+  margin-right: 10px;
+  overflow: hidden;
+  border: 1px solid #efefef;
+  border-radius: 50%;
 }
 
 .chat-user__remove {

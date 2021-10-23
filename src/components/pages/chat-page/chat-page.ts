@@ -2,8 +2,6 @@ import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
 import {Router} from '../../../utils/router';
 import store from '../../../utils/store';
-import chatsController from '../../../controllers/chats-controller';
-import serializeForm from '../../../utils/serialize-form';
 import '../../atoms/link';
 import '../../organisms/search-form';
 import '../../organisms/chat-form';
@@ -18,11 +16,11 @@ const tmpl = new Templator(`
   <main class="chat-page">
     <aside class="chat-page__sidebar">
       <div class="chat-page__menu">
-        {{> atoms-link text="Создать чат" onClick=.toggleCreateChat}}
+        {{> atoms-link className="chat-page__menu-link" text="Создать чат" onClick=.toggleCreateChat}}
+        {{> atoms-link className="chat-page__menu-link" href="/settings" text="Профиль >"}}
         {{#if isAddingChat}}
           {{> templates-modal &content="organisms-create-chat-form" .content=.createChatForm onClose=.toggleCreateChat}}
         {{/if}}
-        {{> atoms-link href="/settings" text="Профиль >"}}
       </div>
       {{> organisms-search-form}}
       <div class="chat-page__chats">
@@ -57,29 +55,8 @@ export class ChatPage extends Block {
     this.state = {
       isAddingChat: false,
       activeChat: null,
-      toggleCreateChat: (): void => {
-        this.setState({isAddingChat: !this.state.isAddingChat});
-      },
-      toggleActive: (id: number): void => {
-        const activeChat = this.state.activeChat === id ? null : id;
-
-        this.setState({
-          activeChat,
-        });
-      },
       createChatForm: {
-        events: {
-          submit: async (event: SubmitEvent) => {
-            event.preventDefault();
-            const formData = serializeForm(event.target as HTMLFormElement) as {
-              title: string;
-            };
-            console.log(formData);
-
-            await chatsController.createChat(formData);
-            this.setState({isAddingChat: false});
-          },
-        },
+        onSubmit: this.toggleCreateChat.bind(this),
       },
     };
   }
@@ -90,8 +67,25 @@ export class ChatPage extends Block {
     }
   }
 
+  toggleCreateChat(): void {
+    this.setState({isAddingChat: !this.state.isAddingChat});
+  }
+
+  toggleActive(id: number): void {
+    const activeChat = this.state.activeChat === id ? null : id;
+    if (activeChat) {
+      store.state.chats[activeChat].unread_count = 0;
+    }
+
+    this.setState({
+      activeChat,
+    });
+  }
+
   render(): string {
     return tmpl.compile({
+      toggleActive: this.toggleActive.bind(this),
+      toggleCreateChat: this.toggleCreateChat.bind(this),
       ...this.props,
       ...this.state,
     });

@@ -1,15 +1,16 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
 import userController from '../../../controllers/user-controller';
+import '../../molecules/form-field';
 import './user-search-form.css';
 
 const tmpl = new Templator(`
   <form class="user-search-form">
-    <label for="user-search-form" class="user-search-form__label">Добавить пользователя:</label>
+    <h2 class="user-search-form__title">{{title}}</h2>
     <div class="user-search-form__results">
-      {{> atoms-input name="user-search-form" className="user-search-form__input" onInput=.handleInput value=.value}}
+      {{> molecules-form-field name="user-search-form" onInput=.handleInput value=.value label="Логин"}}
       {{#if showEmptyMessage}}
-        <div class="user-search-form__empty">Ничего не найдено</div>
+        <div class="user-search-form__empty">Пользователи не найдены</div>
       {{/if}}
       <ul class="user-search-form__list">
         {{#each results}}
@@ -71,11 +72,8 @@ export class UserSearchForm extends Block {
         this.abortController.signal
       );
 
-      const hideAddedUsers = (user: UserData) =>
-        !this.props.users.some((chatUser: UserData) => user.id === chatUser.id);
-
       this.abortController = null;
-      this.setState({results: results.filter(hideAddedUsers), value});
+      this.setState({results: results.filter(this.props.filterUsers), value});
     } catch (e) {
       console.log(e);
     }
