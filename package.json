@@ -3,11 +3,16 @@
     "dev": "webpack serve",
     "build": "webpack",
     "start": "node server.js",
+    "test": "mocha -r ts-node/register -r ignore-styles -r global-jsdom/register src/**/*.spec.ts",
+    "lint": "npm run ts:check && npm run ts:lint && npm run css:lint",
     "ts:check": "tsc --noEmit",
     "ts:lint": "eslint src",
     "css:lint": "stylelint src",
     "css:fix": "postcss --config config --replace --no-map src/**/*.css",
-    "test": "mocha -r ts-node/register -r ignore-styles -r global-jsdom/register src/**/*.spec.ts",
+    "docker:build": "docker build -t chat .",
+    "docker:start": "docker run -p 3000:3000 -d chat",
+    "docker:stop": "docker stop $(docker ps -q --filter ancestor=chat)",
+    "heroku:release": "git push heroku $(git rev-parse --symbolic-full-name --abbrev-ref HEAD):main",
     "prepare": "husky install"
   },
   "repository": {
