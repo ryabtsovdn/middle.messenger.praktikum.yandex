@@ -16,8 +16,8 @@ const tmpl = new Templator(`
 `);
 
 export class ChatUser extends Block {
-  initState(props: AnyObject): void {
-    this.state = {
+  init(props: AnyObject): AnyObject {
+    return {
       avatar: props.user.avatar
         ? `${RESOURCES_URL}${props.user.avatar}`
         : defaultUserImg,

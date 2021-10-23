@@ -1,8 +1,8 @@
 import {Block} from '../../../../utils/block';
 
 export class MenuButton extends Block {
-  initState(props: AnyObject = {}): void {
-    this.state = {
+  init(props: AnyObject = {}): AnyObject {
+    return {
       events: {
         click: props.onClick,
       },

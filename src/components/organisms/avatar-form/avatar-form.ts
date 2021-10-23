@@ -15,8 +15,8 @@ const tmpl = new Templator(`
 `);
 
 export class AvatarForm extends Block {
-  initState(): void {
-    this.state = {
+  init(): AnyObject {
+    return {
       events: {
         submit: async (event: SubmitEvent) => {
           event.preventDefault();

@@ -20,8 +20,8 @@ const tmpl = new Templator(`
 `);
 
 export class PasswordForm extends Block {
-  initState(): void {
-    this.state = {
+  init(): AnyObject {
+    return {
       events: {
         submit: async (event: SubmitEvent) => {
           event.preventDefault();

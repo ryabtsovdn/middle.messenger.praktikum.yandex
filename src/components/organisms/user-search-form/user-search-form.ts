@@ -26,10 +26,13 @@ const tmpl = new Templator(`
 export class UserSearchForm extends Block {
   abortController: Nullable<AbortController> = null;
 
-  initState(props: AnyObject): void {
+  init(props: AnyObject): AnyObject {
     this.state = {
       results: [],
       value: '',
+    };
+
+    return {
       handleInput: this.handleInput.bind(this),
       events: {
         click: (event: MouseEvent) => {

@@ -21,13 +21,16 @@ const tmpl = new Templator(`
 `);
 
 export class Chat extends Block {
-  initState(props: AnyObject): void {
+  init(props: AnyObject): AnyObject {
     this.state = {
       unread: props.chat.unread_count || null,
+      lastMessage: this.getLastMessage(props.chat),
+    };
+
+    return {
       avatar: props.chat.avatar
         ? `${RESOURCES_URL}${props.chat.avatar}`
         : defaultUserImg,
-      lastMessage: this.getLastMessage(props.chat),
       events: {
         click(): void {
           props.onClick(props.chat.id);
@@ -41,9 +44,6 @@ export class Chat extends Block {
     store.subscribe(storedChat.messages, () => {
       this.setState({
         unread: storedChat.unread_count || null,
-        avatar: storedChat.avatar
-          ? `${RESOURCES_URL}${storedChat.avatar}`
-          : defaultUserImg,
         lastMessage: this.getLastMessage(storedChat),
       });
     });

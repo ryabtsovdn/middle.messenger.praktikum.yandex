@@ -33,24 +33,46 @@ const tmpl = new Templator(`
 `);
 
 export class ChatHeader extends Block {
-  initState(): void {
+  init(props: AnyObject): AnyObject {
+    const {chatId} = props;
+    const chat = store.state.chats[chatId];
+
     this.state = {
       showChatMenu: false,
-      removeUser: this.removeUser.bind(this),
-      addUser: this.addUser.bind(this),
+      isAddingUser: false,
+      isRemovingUser: false,
+    };
+
+    return {
       menuButton: new MenuButton({
         onClick: this.toggleChatMenu.bind(this),
       }),
       chatMenu: new ChatMenu({
-        addUser: () => {
+        add: () => {
           this.setState({showChatMenu: false, isAddingUser: true});
         },
-        removeUser: () => {
+        remove: () => {
           this.setState({showChatMenu: false, isRemovingUser: true});
         },
       }),
       closeForm: (): void => {
         this.setState({isAddingUser: false, isRemovingUser: false});
+      },
+      addForm: {
+        title: 'Добавить пользователя',
+        onSelect: this.addUser.bind(this),
+        chatId: chatId,
+        users: chat.users,
+        filterUsers: (user: UserData) =>
+          !chat.users.some((chatUser: UserData) => user.id === chatUser.id),
+      },
+      removeForm: {
+        title: 'Удалить пользователя',
+        onSelect: this.removeUser.bind(this),
+        chatId: chatId,
+        users: chat.users,
+        filterUsers: (user: UserData) =>
+          chat.users.some((chatUser: UserData) => user.id === chatUser.id),
       },
     };
   }
@@ -81,29 +103,14 @@ export class ChatHeader extends Block {
   }
 
   render(): string {
-    const chat = store.state.chats[this.props.chatId];
+    const {chatId} = this.props;
+    const chat = store.state.chats[chatId];
     const admin = chat.users?.find((u: UserData) => u.role === 'admin');
 
     return tmpl.compile({
       ...this.props,
       ...this.state,
       users: chat.users,
-      addForm: {
-        title: 'Добавить пользователя',
-        onSelect: this.state.addUser,
-        chatId: this.props.chatId,
-        users: chat.users,
-        filterUsers: (user: UserData) =>
-          !chat.users.some((chatUser: UserData) => user.id === chatUser.id),
-      },
-      removeForm: {
-        title: 'Удалить пользователя',
-        onSelect: this.state.removeUser,
-        chatId: this.props.chatId,
-        users: chat.users,
-        filterUsers: (user: UserData) =>
-          chat.users.some((chatUser: UserData) => user.id === chatUser.id),
-      },
       isAdmin: admin && admin.id === store.state.user.id,
     });
   }

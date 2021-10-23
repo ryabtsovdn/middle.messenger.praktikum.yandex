@@ -4,13 +4,15 @@ import 'mocha';
 import {Block} from './block';
 
 describe('Block', function () {
-  describe('initState', function () {
-    it('Should init state correctly', function () {
+  describe('init', function () {
+    it('Should init props/state correctly', function () {
       class Component extends Block {
-        initState(): void {
+        init(): AnyObject {
           this.state = {
             test: 1,
           };
+
+          return {test: 2};
         }
       }
 
@@ -18,6 +20,8 @@ describe('Block', function () {
 
       // @ts-ignore
       expect(c.state.test).equal(1);
+      // @ts-ignore
+      expect(c.props.test).equal(2);
     });
   });
 
@@ -122,7 +126,7 @@ describe('Block', function () {
   describe('setState', function () {
     it('Should change state', function () {
       class Component extends Block {
-        initState(): void {
+        init(): void {
           this.state = {test: 1};
         }
         render() {

@@ -11,8 +11,8 @@ const tmpl = new Templator(`
 `);
 
 export class FileField extends Block {
-  initState(): void {
-    this.state = {
+  init(): AnyObject {
+    return {
       events: {
         change: (event: InputEvent) => {
           const el = event.target as HTMLInputElement;

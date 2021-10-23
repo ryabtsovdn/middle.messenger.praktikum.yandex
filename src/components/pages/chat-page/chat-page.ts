@@ -51,10 +51,13 @@ const tmpl = new Templator(`
 `);
 
 export class ChatPage extends Block {
-  initState(): void {
+  init(): AnyObject {
     this.state = {
       isAddingChat: false,
       activeChat: null,
+    };
+
+    return {
       createChatForm: {
         onSubmit: this.toggleCreateChat.bind(this),
       },

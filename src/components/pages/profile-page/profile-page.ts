@@ -40,9 +40,8 @@ const tmpl = new Templator(`
 `);
 
 export class ProfilePage extends Block {
-  initState(props: AnyObject): void {
-    this.state = {
-      ...props,
+  init(props: AnyObject): AnyObject {
+    return {
       hideSubmit: props.state === 'profile',
       user: store.state.user,
       onLogout: (event: MouseEvent) => {
@@ -68,6 +67,7 @@ export class ProfilePage extends Block {
 
     await authController.getUser();
   }
+
   render(): string {
     return tmpl.compile({
       ...this.props,
