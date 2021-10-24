@@ -25,8 +25,8 @@ const tmpl = new Templator(`
 `);
 
 export class ProfileForm extends Block {
-  initState(): void {
-    this.state = {
+  init(): AnyObject {
+    return {
       events: {
         submit: async (event: SubmitEvent) => {
           event.preventDefault();

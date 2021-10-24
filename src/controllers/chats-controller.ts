@@ -30,7 +30,11 @@ class ChatsController {
 
             if (Array.isArray(parsedMessage)) {
               current.messages.push(...parsedMessage.reverse());
-            } else {
+            } else if (parsedMessage.type === 'message') {
+              if (parsedMessage.user_id !== store.state.user.id) {
+                current.unread_count++;
+              }
+              current.last_message = parsedMessage;
               current.messages.push(parsedMessage);
             }
           },

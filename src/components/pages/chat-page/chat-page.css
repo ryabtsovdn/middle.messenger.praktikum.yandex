@@ -20,6 +20,10 @@
   min-height: 56px;
 }
 
+.chat-page__menu-link:not(:hover) {
+  color: #999;
+}
+
 .chat-page__chats {
   overflow: hidden;
 }

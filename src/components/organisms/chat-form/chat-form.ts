@@ -14,8 +14,8 @@ const tmpl = new Templator(`
 `);
 
 export class ChatForm extends Block {
-  initState(): void {
-    this.state = {
+  init(): AnyObject {
+    return {
       events: {
         submit: (event: SubmitEvent) => {
           event.preventDefault();

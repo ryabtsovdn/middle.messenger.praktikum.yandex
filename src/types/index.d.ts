@@ -55,6 +55,7 @@ interface MessageData {
   user: UserData;
   time: string;
   content: string;
+  user_id?: number;
 }
 
 interface ChatData {

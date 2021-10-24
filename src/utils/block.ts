@@ -19,11 +19,9 @@ export class Block {
   constructor(props: AnyObject = {}) {
     this._eventBus = new EventBus();
 
-    this.initState(props);
-
     this._id = `id-${nanoid()}`;
-    this.props = this._makeProxy(props);
-    this.state = this._makeProxy(this.state);
+    this.props = this._makeProxy(Object.assign(props, this.init(props)));
+    this.state = this._makeProxy(this.state || {});
 
     this.forceUpdate = this.forceUpdate.bind(this);
     this._registerEvents();
@@ -32,7 +30,7 @@ export class Block {
   }
 
   // @ts-ignore
-  protected initState(props: AnyObject): void {
+  protected init(props: AnyObject): void | AnyObject {
     this.state = {};
   }
 
@@ -138,20 +136,14 @@ export class Block {
     });
   }
 
-  _getEventListeners(): Record<string, EventListener> {
-    return {...this.props.events, ...this.state.events};
-  }
-
   _removeEvents(): void {
     if (!this.element) {
       return;
     }
 
-    const events = this._getEventListeners();
+    const events = (this.props.events || {}) as Record<string, EventListener>;
 
-    for (const [event, listener] of Object.entries(
-      events as Record<string, EventListener>
-    )) {
+    for (const [event, listener] of Object.entries(events)) {
       this.element.removeEventListener(event, listener);
     }
   }
@@ -161,11 +153,9 @@ export class Block {
       throw new Error('No element');
     }
 
-    const events = this._getEventListeners();
+    const events = (this.props.events || {}) as Record<string, EventListener>;
 
-    for (const [event, listener] of Object.entries(
-      events as Record<string, EventListener>
-    )) {
+    for (const [event, listener] of Object.entries(events)) {
       this.element.addEventListener(event, listener);
     }
   }

@@ -21,8 +21,8 @@ const tmpl = new Templator(`
 `);
 
 export class SignInForm extends Block {
-  initState(): void {
-    this.state = {
+  init(): AnyObject {
+    return {
       events: {
         submit: async (event: SubmitEvent) => {
           event.preventDefault();

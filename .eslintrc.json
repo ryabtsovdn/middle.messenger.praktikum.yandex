@@ -28,5 +28,14 @@
     "rules": {
       "require-jsdoc": 0,
       "@typescript-eslint/ban-ts-comment": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": ["wallaby.js", "webpack.config.js", "server.js"],
+        "rules": {
+          "@typescript-eslint/no-var-requires": 0,
+          "no-undef": 0
+        }
+      }
+    ]
 }

@@ -1,0 +1,7 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm test
+npm run ts:check
+npm run ts:lint
+npm run css:lint

@@ -119,7 +119,11 @@ export class Templator {
       prop = prop.slice(1);
     }
 
-    const data = get(ctx, prop, '');
+    let data = get(ctx, prop, '');
+
+    if (data instanceof Block) {
+      data = this._createStub(data);
+    }
 
     return tmpl.replace(new RegExp(match[0], 'gi'), data);
   }

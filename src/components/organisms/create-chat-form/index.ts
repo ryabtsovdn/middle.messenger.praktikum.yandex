@@ -1,1 +1,1 @@
-export * from './create-chat-form.ts';
+export * from './create-chat-form';

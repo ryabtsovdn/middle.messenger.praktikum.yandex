@@ -1,37 +1,33 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
+import {RESOURCES_URL} from '../../../constants';
+import defaultUserImg from '../../../img/default-user.svg';
 import './chat-user.css';
 
 const tmpl = new Templator(`
   <div class="chat-user">
+    <div class="chat-user__avatar">
+      <img src="{{avatar}}">
+    </div>
     {{user.first_name}}
     {{user.second_name}}
-    {{#if canRemove}}
-      <button class="chat-user__remove"></button>
-    {{/if}}
+    ({{user.login}})
   </div>
 `);
 
 export class ChatUser extends Block {
-  initState(props: AnyObject): void {
-    this.state = {
-      events: {
-        click: async (event: MouseEvent) => {
-          const el = event.target as HTMLElement;
-          if (el.tagName === 'BUTTON') {
-            (el as HTMLButtonElement).disabled = true;
-            await props.onRemove(props.user.id);
-            (el as HTMLButtonElement).disabled = false;
-          }
-        },
-      },
+  init(props: AnyObject): AnyObject {
+    return {
+      avatar: props.user.avatar
+        ? `${RESOURCES_URL}${props.user.avatar}`
+        : defaultUserImg,
     };
   }
 
   render(): string {
     return tmpl.compile({
       ...this.props,
-      canRemove: this.props.isAdmin && this.props.user.role !== 'admin',
+      ...this.state,
     });
   }
 }

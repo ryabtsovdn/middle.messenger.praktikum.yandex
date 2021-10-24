@@ -1,5 +1,7 @@
 import {Block} from '../../../utils/block';
 import {Templator} from '../../../utils/templator';
+import chatsController from '../../../controllers/chats-controller';
+import serializeForm from '../../../utils/serialize-form';
 import '../../atoms/button';
 import '../../molecules/form-field';
 import './create-chat-form.css';
@@ -13,6 +15,23 @@ const tmpl = new Templator(`
 `);
 
 export class CreateChatForm extends Block {
+  init(props: AnyObject): AnyObject {
+    return {
+      events: {
+        submit: async (event: SubmitEvent) => {
+          event.preventDefault();
+          const formData = serializeForm(event.target as HTMLFormElement) as {
+            title: string;
+          };
+          console.log(formData);
+
+          await chatsController.createChat(formData);
+          props.onSubmit();
+        },
+      },
+    };
+  }
+
   render(): string {
     return tmpl.compile(this.props);
   }

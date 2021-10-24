@@ -2,6 +2,8 @@ import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
 import store from '../../../utils/store';
 import chatsController from '../../../controllers/chats-controller';
+import {MenuButton} from './components/menu-button';
+import {ChatMenu} from './components/chat-menu';
 import '../../organisms/user-search-form';
 import '../../molecules/chat-user';
 import './chat-header.css';
@@ -11,21 +13,67 @@ const tmpl = new Templator(`
     <ul class="chat-header__users">
       {{#each users}}
         <li class="chat-header__user">
-          {{> molecules-chat-user user=#this onRemove=.removeUser isAdmin=.isAdmin}}
+          {{> molecules-chat-user user=#this isAdmin=.isAdmin}}
         </li>
       {{/each}}
     </ul>
     {{#if isAdmin}}
-      {{> organisms-user-search-form chatId=.chatId onSelect=.addUser users=.users}}
+      {{menuButton}}
+    {{/if}}
+    {{#if showChatMenu}}
+      {{chatMenu}}
+    {{/if}}
+    {{#if isAddingUser}}
+      {{> templates-modal &content="organisms-user-search-form" .content=.addForm onClose=.closeForm}}
+    {{/if}}
+    {{#if isRemovingUser}}
+      {{> templates-modal &content="organisms-user-search-form" .content=.removeForm onClose=.closeForm}}
     {{/if}}
   </div>
 `);
 
 export class ChatHeader extends Block {
-  initState(): void {
+  init(props: AnyObject): AnyObject {
+    const {chatId} = props;
+    const chat = store.state.chats[chatId];
+
     this.state = {
-      removeUser: this.removeUser.bind(this),
-      addUser: this.addUser.bind(this),
+      showChatMenu: false,
+      isAddingUser: false,
+      isRemovingUser: false,
+    };
+
+    return {
+      menuButton: new MenuButton({
+        onClick: this.toggleChatMenu.bind(this),
+      }),
+      chatMenu: new ChatMenu({
+        add: () => {
+          this.setState({showChatMenu: false, isAddingUser: true});
+        },
+        remove: () => {
+          this.setState({showChatMenu: false, isRemovingUser: true});
+        },
+      }),
+      closeForm: (): void => {
+        this.setState({isAddingUser: false, isRemovingUser: false});
+      },
+      addForm: {
+        title: 'Добавить пользователя',
+        onSelect: this.addUser.bind(this),
+        chatId: chatId,
+        users: chat.users,
+        filterUsers: (user: UserData) =>
+          !chat.users.some((chatUser: UserData) => user.id === chatUser.id),
+      },
+      removeForm: {
+        title: 'Удалить пользователя',
+        onSelect: this.removeUser.bind(this),
+        chatId: chatId,
+        users: chat.users,
+        filterUsers: (user: UserData) =>
+          chat.users.some((chatUser: UserData) => user.id === chatUser.id),
+      },
     };
   }
 
@@ -42,6 +90,10 @@ export class ChatHeader extends Block {
     }
   }
 
+  toggleChatMenu(): void {
+    this.setState({showChatMenu: !this.state.showChatMenu});
+  }
+
   async removeUser(id: number): Promise<void> {
     await chatsController.removeUser(this.props.chatId, id);
   }
@@ -51,7 +103,8 @@ export class ChatHeader extends Block {
   }
 
   render(): string {
-    const chat = store.state.chats[this.props.chatId];
+    const {chatId} = this.props;
+    const chat = store.state.chats[chatId];
     const admin = chat.users?.find((u: UserData) => u.role === 'admin');
 
     return tmpl.compile({

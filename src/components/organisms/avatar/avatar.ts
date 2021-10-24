@@ -1,6 +1,7 @@
 import {Templator} from '../../../utils/templator';
 import {Block} from '../../../utils/block';
 import {RESOURCES_URL} from '../../../constants';
+import defaultUserImg from '../../../img/default-user.svg';
 import './avatar.css';
 
 const tmpl = new Templator(`
@@ -18,9 +19,11 @@ const tmpl = new Templator(`
 `);
 
 export class Avatar extends Block {
-  initState(props: AnyObject): void {
-    this.state = {
-      avatar: `${RESOURCES_URL}${props.user.avatar}`,
+  init(props: AnyObject): AnyObject {
+    return {
+      avatar: props.user.avatar
+        ? `${RESOURCES_URL}${props.user.avatar}`
+        : defaultUserImg,
     };
   }
 
